@@ -1,6 +1,7 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHamburger } from '@fortawesome/free-solid-svg-icons';
+import CanvasContainer from './canvasContainer'
 
 const PageContainer = () => {
     return (
@@ -13,6 +14,7 @@ const PageContainer = () => {
                     </button>
                 </div>
             </div>
+            <CanvasContainer></CanvasContainer>
         </div>
     );
 };
