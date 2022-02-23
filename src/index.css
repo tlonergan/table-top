@@ -220,7 +220,7 @@ a {
 }
 
 .board {
-  padding: 32px;
+  padding: 64px;
   display: flex;
   flex-direction: column;
 }
@@ -234,4 +234,15 @@ a {
   height: 80px;
   width: 80px;
   border: .5px solid grey;
+}
+
+.mapSquareSelected {
+  border-color: yellow;
+  background-color: honeydew;
+}
+
+.token {
+  background-color: blue;
+  height: 75px;
+  width: 75px;
 }
