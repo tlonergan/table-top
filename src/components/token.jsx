@@ -2,15 +2,13 @@ import { useDrag } from 'react-dnd';
 import DraggableItemTypes from "../entities/draggableTypes";
 
 const Token = () => {
-    const [isDragging, drag] = useDrag(() =>({
+    const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
-        collect: monitor => ({
-            isDragging: !!monitor.isDragging(),
-        }),
+        item: "singleToken",
     }));
 
     return (
-        <div className="token"></div>
+        <div className="token" ref={drag}></div>
     );
 };
 

@@ -1,9 +1,13 @@
 import { useEffect, useState, useRef } from "react";
+import { useDrop } from 'react-dnd';
+import DraggableItemTypes from '../entities/draggableTypes';
 
 const MapSquare = (props) => {
     const [isSelected, setIsSelected] = useState(false);
-    
-    const thisMapSquare = useRef(null);
+
+    const [{},thisMapSquare] = useDrop(() => ({
+        accept: DraggableItemTypes.TOKEN,
+    }));
 
     useEffect(() => {
     });
