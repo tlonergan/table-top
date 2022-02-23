@@ -9,9 +9,6 @@ const MapSquare = (props) => {
         accept: DraggableItemTypes.TOKEN,
     }));
 
-    useEffect(() => {
-    });
-
     const onSquaredClicked = () => {
         setIsSelected(!isSelected);
     };

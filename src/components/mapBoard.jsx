@@ -3,6 +3,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import MapSquare from "./mapSquare";
 import Token from './token';
+import TokenBox from './tokenBox';
 
 const MapBoard = () => {
     const [squaresWide, setSquaresWide] = useState(25);
@@ -35,6 +36,9 @@ const MapBoard = () => {
 
     return (
         <DndProvider backend={HTML5Backend}>
+            <div className="toolbox">
+                <TokenBox/>
+            </div>
             <div className="board">
                 {rows.map(r => r)}
             </div>
