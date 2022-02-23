@@ -83,11 +83,13 @@ const CanvasContainer = () => {
                     <option value={400}>400</option>
                     <option value={800}>800</option>
                     <option value={1040} selected={true}>1040</option>
+                    <option value={8000}>8000</option>
                 </select>
                 <select onChange={onHeightChange}>
                     <option value={400}>400</option>
                     <option value={800}>800</option>
                     <option value={1040} selected={true}>1040</option>
+                    <option value={8000}>8000</option>
                 </select>
                 <button onClick={onClearClick}>Clear</button>
             </div>

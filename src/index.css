@@ -218,3 +218,20 @@ a {
 .center {
   text-align: center;
 }
+
+.board {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+}
+
+.boardRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.mapSquare {
+  height: 80px;
+  width: 80px;
+  border: .5px solid grey;
+}
