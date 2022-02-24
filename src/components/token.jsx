@@ -1,7 +1,10 @@
 import { useDrag } from 'react-dnd';
+import { useAtom } from 'jotai';
 import DraggableItemTypes from "../entities/draggableTypes";
 
 const Token = (props) => {
+    const [tokenData] = useAtom(props.data);
+
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
         item: "singleToken",
@@ -9,7 +12,7 @@ const Token = (props) => {
     
     return (
         <div className="token" ref={drag}>
-            {props.imageSource ? <img src={props.imageSource}/> : <span/>}
+            {tokenData.imageSource ? <img src={tokenData.imageSource}/> : <span/>}
         </div>
     );
 };

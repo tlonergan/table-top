@@ -17,14 +17,6 @@ const MapBoard = () => {
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
-                if(i === 0 && j === 0){
-                    columns.push((
-                    <MapSquare key={"column" + j} x={i} y={j}>
-                        <Token/>
-                    </MapSquare>));
-                    continue;
-                }
-
                 columns.push((<MapSquare key={"column" + j} x={i} y={j} />));
             }
     
