@@ -7,8 +7,6 @@ import { allTokenAtoms } from '../state/token';
 const TokenBox = () => {
     const [tokenAtoms, setTokenAtoms] = useAtom(allTokenAtoms);
 
-    console.log(tokenAtoms);
-
     useEffect(() => {
             let newTokenAttoms = getTokens().map(token => atom(token));
             setTokenAtoms([...newTokenAttoms]);

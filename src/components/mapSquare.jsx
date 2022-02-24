@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useDrop, useDragLayer } from 'react-dnd';
+import { atom } from 'jotai';
+import { useDrop } from 'react-dnd';
 import DraggableItemTypes from '../entities/draggableTypes';
 import Token from './token';
 
@@ -20,13 +21,9 @@ const MapSquare = ({x, y, children}) => {
         setIsSelected(!isSelected);
     };
 
-    const hasMoved = () => {
-        setDroppedItem(null);
-    };
-
     const renderSquareContents = () => {
         if(droppedItem)
-            return (<Token imageSource={droppedItem.imageSource} hasMoved={hasMoved}/>)
+            return (<Token data={droppedItem}/>)
     };
 
     return (
