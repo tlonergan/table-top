@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import MapSquare from "./mapSquare";
-import Token from './token';
 import TokenBox from './tokenBox';
 
 const MapBoard = () => {
