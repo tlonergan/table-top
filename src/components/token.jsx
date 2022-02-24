@@ -5,6 +5,11 @@ const Token = (props) => {
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
         item: {imageSource: props.imageSource, name: "some bloody token"},
+        options: { dropEffect: "move"},
+        end: (item, monitor) => {
+            console.log(item);
+            console.log(monitor.didDrop())
+        },
     }));
     
     return (
