@@ -7,7 +7,12 @@ const Token = ({data}) => {
 
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
-        item: "singleToken",
+        item: {imageSource: props.imageSource, name: "some bloody token"},
+        options: { dropEffect: "move"},
+        end: (item, monitor) => {
+            console.log(item);
+            console.log(monitor.didDrop())
+        },
     }));
     
     return (
