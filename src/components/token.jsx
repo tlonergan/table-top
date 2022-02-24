@@ -4,7 +4,7 @@ import DraggableItemTypes from "../entities/draggableTypes";
 const Token = (props) => {
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
-        item: "singleToken",
+        item: {imageSource: props.imageSource, name: "some bloody token"},
     }));
     
     return (
