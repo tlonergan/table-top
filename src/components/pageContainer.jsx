@@ -1,4 +1,5 @@
 import React from 'react';
+import { Provider } from 'jotai';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHamburger } from '@fortawesome/free-solid-svg-icons';
 // import CanvasContainer from './canvasContainer'
@@ -6,7 +7,7 @@ import MapBoard from './mapBoard';
 
 const PageContainer = () => {
     return (
-        <div>
+        <Provider>
             <div className="navigationBar">
                 <span>Table Top</span>
                 <div>
@@ -17,7 +18,7 @@ const PageContainer = () => {
             </div>
             {/* <CanvasContainer></CanvasContainer> */}
             <MapBoard/>
-        </div>
+        </Provider>
     );
 };
 

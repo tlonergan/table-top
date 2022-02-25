@@ -21,10 +21,15 @@ const MapBoard = () => {
     const setUpBoard = () => {
         let newRows = [];
         let squareAtoms = [];
+
+        console.log("Re-drawing whole board");
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
+
                 const boardSquareAtom = atom({position: {x: i, y: j}});
+                boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
+
                 squareAtoms.push(boardSquareAtom);
 
                 columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} />));

@@ -10,14 +10,18 @@ const TokenBox = () => {
     const [tokenAtoms, setTokenAtoms] = useAtom(allTokenAtoms);
 
     useEffect(() => {
-            let newTokenAttoms = getTokens().map(token => atom(token));
+            let newTokenAttoms = getTokens().map(token => {
+                const tokenAtom = atom(token);
+                tokenAtom.debugLabel = new Date();
+                return tokenAtom;
+            });
             setTokenAtoms([...newTokenAttoms]);
         }, []);
         
     return (
         <div>
             {tokenAtoms.map(tokenAtom => {
-                return (<Token key={tokenAtom} data={tokenAtom} parentAtom={tokenBoxAtom} />)
+                return (<Token key={tokenAtom} state={tokenAtom} parentAtom={tokenBoxAtom} />)
             })}
         </div>
     );
