@@ -1,7 +1,6 @@
 import { atom } from 'jotai';
 
 const internalTokenAtoms = atom([]);
-const boardTokensAtom = atom([]);
 
 export const allTokenAtoms = atom(
     (get) => get(internalTokenAtoms),
@@ -9,5 +8,3 @@ export const allTokenAtoms = atom(
         set(internalTokenAtoms, update);
     }
 );
-
-// export const addTokenToBoard = (tokenAtom) => {};

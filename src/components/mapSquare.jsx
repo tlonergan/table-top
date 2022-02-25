@@ -1,19 +1,27 @@
-import { useState } from "react";
-import { atom } from 'jotai';
+import { useState, useEffect, useMemo } from "react";
 import { useDrop } from 'react-dnd';
+import { atom, useAtom } from 'jotai';
 import DraggableItemTypes from '../entities/draggableTypes';
 import Token from './token';
 
-const MapSquare = ({x, y, children}) => {
-    const [droppedItem, setDroppedItem] = useState(null);
+const boardSquareAtom = atom({});
+
+const MapSquare = ({x, y}) => {
     const [isSelected, setIsSelected] = useState(false);
     const [xPostion] = useState(x);
     const [yPostion] = useState(y);
 
+    // const boardSquareAtom  = useMemo(() => atom({xPostion, yPostion}), [xPostion, yPostion]);
+    const [boardState, setBoardState] = useAtom(boardSquareAtom);
+
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
-        drop: (item, monitor) => {
-            setDroppedItem(item);
+        drop: (item) => {
+            console.log("map square dropped", item)
+
+            boardState.tokenAtom = item;
+            setBoardState(boardState); //WHY ISN'T THIS TRIGGERING A RE-RENDER?!
+            // setIsSelected(!isSelected);
         },
     }));
 
@@ -22,8 +30,10 @@ const MapSquare = ({x, y, children}) => {
     };
 
     const renderSquareContents = () => {
-        if(droppedItem)
-            return (<Token data={droppedItem}/>)
+        let tokenAtom = boardState.tokenAtom;
+        console.log("render square", tokenAtom);
+        if(tokenAtom)
+            return (<Token data={tokenAtom} parentAtom={boardSquareAtom} />)
     };
 
     return (
