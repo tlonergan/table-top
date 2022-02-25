@@ -15,9 +15,9 @@ const Token = ({state, parentAtom}) => {
         });
     }, [parent]);
 
-    useEffect(() => {
-        updatePreviousParent();
-    }, [token]);
+    // useEffect(() => {
+    //     updatePreviousParent();
+    // }, [token]);
 
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
@@ -35,8 +35,7 @@ const Token = ({state, parentAtom}) => {
             return;
         if(parentPostion.x != tokenPosition.x || parentPostion.y != tokenPosition.y){
             console.log("Position changed");
-
-            // parent.tokenAtom = null;
+            
             setParent(prev => {
                 let newParent = ({...prev});
                 newParent.tokenAtom = null;
