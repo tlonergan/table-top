@@ -1,36 +1,44 @@
 import { useState, useEffect } from "react";
+import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import MapSquare from "./mapSquare";
-import Token from './token';
 import TokenBox from './tokenBox';
 
+const boardSquareAtomAtoms = atom([]);
+
 const MapBoard = () => {
-    const [squaresWide, setSquaresWide] = useState(25);
-    const [squaresHigh, setSquaresHigh] = useState(25);
+    console.log("Re-render board");
+    const [, setBoardSquareAtoms] = useAtom(boardSquareAtomAtoms);
+
+    const [squaresWide] = useState(25);
+    const [squaresHigh] = useState(25);
+
     const [rows, setRows] = useState([]);
 
     useEffect(() => setUpBoard(), [squaresWide, squaresHigh]);
 
     const setUpBoard = () => {
         let newRows = [];
+        let squareAtoms = [];
+
+        console.log("Re-drawing whole board");
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
-                if(i === 0 && j === 0){
-                    columns.push((
-                    <MapSquare key={"column" + j} x={i} y={j}>
-                        <Token/>
-                    </MapSquare>));
-                    continue;
-                }
 
-                columns.push((<MapSquare key={"column" + j} x={i} y={j} />));
+                const boardSquareAtom = atom({position: {x: i, y: j}});
+                boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
+
+                squareAtoms.push(boardSquareAtom);
+
+                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} />));
             }
     
             newRows.push((<div className="boardRow" key={"row" + i}>{columns}</div>));
         }
 
+        setBoardSquareAtoms(squareAtoms);
         setRows(newRows);
     };
 

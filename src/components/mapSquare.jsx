@@ -1,36 +1,40 @@
-import { useState } from "react";
-import { useDrop, useDragLayer } from 'react-dnd';
+import { useDrop } from 'react-dnd';
+import { useAtom } from 'jotai';
 import DraggableItemTypes from '../entities/draggableTypes';
+
 import Token from './token';
 
-const MapSquare = ({x, y, children}) => {
-    const [droppedItem, setDroppedItem] = useState(null);
-    const [isSelected, setIsSelected] = useState(false);
-    const [xPostion] = useState(x);
-    const [yPostion] = useState(y);
+const MapSquare = ({state}) => {
+    const [square, setSquare] = useAtom(state);
 
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
-        drop: (item, monitor) => {
-            setDroppedItem(item);
+        drop: (item) => {
+            setSquare(prev => {
+                let newSquare = ({...prev});
+                newSquare.tokenAtom = item;
+                return newSquare;
+            });
         },
     }));
-
+ 
     const onSquaredClicked = () => {
-        setIsSelected(!isSelected);
-    };
-
-    const hasMoved = () => {
-        setDroppedItem(null);
+        console.log("Square Selected:", square.isSelected);
+        setSquare(prev => {
+            let newSquare = ({...prev});
+            newSquare.isSelected = !prev.isSelected;
+            return newSquare;
+        });
     };
 
     const renderSquareContents = () => {
-        if(droppedItem)
-            return (<Token imageSource={droppedItem.imageSource} hasMoved={hasMoved}/>)
+        let tokenAtom = square.tokenAtom;
+        if(tokenAtom)
+            return (<Token state={tokenAtom} parentAtom={state} />)
     };
 
     return (
-        <div className={"mapSquare " + (isSelected ? "mapSquareSelected": "")} ref={thisMapSquare} onClick={onSquaredClicked}>
+        <div className={"mapSquare " + (square.isSelected ? "mapSquareSelected": "")} ref={thisMapSquare} onClick={onSquaredClicked}>
             {renderSquareContents()}
         </div>
     );

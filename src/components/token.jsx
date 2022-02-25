@@ -1,20 +1,52 @@
+import { useAtom } from 'jotai';
 import { useDrag } from 'react-dnd';
 import DraggableItemTypes from "../entities/draggableTypes";
+import { useEffect } from 'react';
 
-const Token = (props) => {
+const Token = ({state, parentAtom}) => {
+    const [token, setToken] = useAtom(state);
+    const [parent, setParent] = useAtom(parentAtom);
+
+    useEffect(() => {
+        setToken(prev => {
+            let newToken = ({...prev});
+            newToken.position = parent.position;
+            return newToken;
+        });
+    }, [parent]);
+
+    // useEffect(() => {
+    //     updatePreviousParent();
+    // }, [token]);
+
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
-        item: {imageSource: props.imageSource, name: "some bloody token"},
+        item: state,
         options: { dropEffect: "move"},
-        end: (item, monitor) => {
-            console.log(item);
-            console.log(monitor.didDrop())
-        },
     }));
+
+    const updatePreviousParent = () => {
+        var parentPostion = parent.position
+        let tokenPosition = token.position;
+        
+        console.log("In Token Update Parent", parentPostion, tokenPosition);
+
+        if(!parentPostion || !tokenPosition)
+            return;
+        if(parentPostion.x != tokenPosition.x || parentPostion.y != tokenPosition.y){
+            console.log("Position changed");
+            
+            setParent(prev => {
+                let newParent = ({...prev});
+                newParent.tokenAtom = null;
+                return newParent;
+            });
+        }
+    };
     
     return (
         <div className="token" ref={drag}>
-            {props.imageSource ? <img src={props.imageSource}/> : <span/>}
+            {token.imageSource ? <img src={token.imageSource}/> : <span/>}
         </div>
     );
 };
