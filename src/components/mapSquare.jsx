@@ -1,39 +1,40 @@
 import { useState, useEffect, useMemo } from "react";
 import { useDrop } from 'react-dnd';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import DraggableItemTypes from '../entities/draggableTypes';
+
 import Token from './token';
 
-const boardSquareAtom = atom({});
+const MapSquare = ({state}) => {
+    console.log("re-render square");
+    const [square, setSquare] = useAtom(state);
 
-const MapSquare = ({x, y}) => {
     const [isSelected, setIsSelected] = useState(false);
-    const [xPostion] = useState(x);
-    const [yPostion] = useState(y);
+    const [squareContents, setSquareContents] = useState([]);
 
-    // const boardSquareAtom  = useMemo(() => atom({xPostion, yPostion}), [xPostion, yPostion]);
-    const [boardState, setBoardState] = useAtom(boardSquareAtom);
+    console.log("Board State: ", square);
 
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
         drop: (item) => {
             console.log("map square dropped", item)
 
-            boardState.tokenAtom = item;
-            setBoardState(boardState); //WHY ISN'T THIS TRIGGERING A RE-RENDER?!
-            // setIsSelected(!isSelected);
+            square.tokenAtom = item;
+            setSquare(square); //Not triggering a re-render
+            setSquareContents(item, ...squareContents);
+            console.log("Board state after update: ", square);
         },
     }));
-
+ 
     const onSquaredClicked = () => {
         setIsSelected(!isSelected);
     };
 
     const renderSquareContents = () => {
-        let tokenAtom = boardState.tokenAtom;
-        console.log("render square", tokenAtom);
+        let tokenAtom = square.tokenAtom;
+        console.log("render square contents", tokenAtom);
         if(tokenAtom)
-            return (<Token data={tokenAtom} parentAtom={boardSquareAtom} />)
+            return (<Token data={tokenAtom} state={state} />)
     };
 
     return (
