@@ -19,22 +19,22 @@ const MapSquare = ({state}) => {
     }));
  
     const onSquaredClicked = () => {
+        console.log("Square Selected:", square.isSelected);
         setSquare(prev => {
             let newSquare = ({...prev});
-            newSquare = !prev.isSelected;
+            newSquare.isSelected = !prev.isSelected;
             return newSquare;
         });
     };
 
     const renderSquareContents = () => {
         let tokenAtom = square.tokenAtom;
-        console.log("render square contents", square, tokenAtom);
         if(tokenAtom)
             return (<Token state={tokenAtom} parentAtom={state} />)
     };
 
     return (
-        <div className={"mapSquare " + (square && square.isSelected ? "mapSquareSelected": "")} ref={thisMapSquare} onClick={onSquaredClicked}>
+        <div className={"mapSquare " + (square.isSelected ? "mapSquareSelected": "")} ref={thisMapSquare} onClick={onSquaredClicked}>
             {renderSquareContents()}
         </div>
     );
