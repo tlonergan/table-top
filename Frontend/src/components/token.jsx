@@ -1,14 +1,15 @@
-import { useState, useEffect } from 'react';
 import { useAtom } from 'jotai';
 import { useDrag } from 'react-dnd';
 import DraggableItemTypes from "../entities/draggableTypes";
 
 const Token = ({state, mapTokenState}) => {
+    console.log("Render token");
+    
     const [token] = useAtom(state);
 
     const [, drag] = useDrag(() =>({
         type: DraggableItemTypes.TOKEN,
-        item: {item: state, mapTokenState},
+        item: {tokenAtom: state, mapTokenAtom: mapTokenState},
         options: { dropEffect: "move"},
     }));
     

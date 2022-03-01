@@ -1,9 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
 import { removeSelectedMapToken } from '../state/token';
+import keyCodes from '../entities/keyCodes';
+import { boardHubConnection, startHubConnection } from '../state/hubConnections';
 
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
@@ -12,6 +14,8 @@ const boardSquareAtomAtoms = atom([]);
 
 const MapBoard = () => {
     console.log("Re-render board");
+    const movementConnection = useMemo(() => boardHubConnection, []);
+
     const [, setBoardSquareAtoms] = useAtom(boardSquareAtomAtoms);
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
 
@@ -24,13 +28,16 @@ const MapBoard = () => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
       }, []);
 
-    useEffect(() => setUpBoard(), [squaresWide, squaresHigh]);
+    useEffect(() => {
+        startHubConnection(movementConnection)
+            .then (() => setUpBoard());
+    }, [squaresWide, squaresHigh]);
 
     const setUpBoard = () => {
         let newRows = [];
         let squareAtoms = [];
 
-        console.log("Re-drawing whole board");
+        console.log("Creating all Squares on board");
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
@@ -40,7 +47,7 @@ const MapBoard = () => {
 
                 squareAtoms.push(boardSquareAtom);
 
-                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} />));
+                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
             }
     
             newRows.push((<div className="boardRow" key={"row" + i}>{columns}</div>));
@@ -51,7 +58,7 @@ const MapBoard = () => {
     };
 
     const onDeleteRemoveSelectedMapToken = (e) => {
-        if(e.keyCode !== 46 && e.keyCode !== 8)
+        if(e.keyCode !== keyCodes.DELETE && e.keyCode !== keyCodes.BACKSPACE)
             return;
 
         deleteMapToken(null);

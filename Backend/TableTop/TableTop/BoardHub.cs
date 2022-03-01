@@ -5,8 +5,8 @@ namespace TableTop;
 
 public class BoardHub : Hub
 {
-    public async Task MoveToken(Guid tokenId, Position tokenPosition)
+    public async Task MoveToken(Position tokenPosition, Guid mapTokenId, Guid tokenId)
     {
-        await Clients.All.SendAsync("TokenMoved", tokenId, tokenPosition);
+        await Clients.All.SendAsync("TokenMoved", tokenPosition, mapTokenId, tokenId);
     }
 }

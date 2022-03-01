@@ -10,6 +10,18 @@ builder.Services.AddSignalR();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ClientPermissions",
+                      policy =>
+                      {
+                          policy.AllowAnyHeader()
+                                .AllowAnyMethod()
+                                .WithOrigins("http://localhost:3000")
+                                .AllowCredentials();
+                      });
+});
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -20,6 +32,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseCors("ClientPermissions");
 
 app.UseAuthorization();
 
