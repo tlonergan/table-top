@@ -21,7 +21,6 @@ const MapSquare = ({state}) => {
     }));
  
     const onSquaredClicked = () => {
-        console.log("Square Selected:", square.isSelected);
         setSquare(prev => {
             let newSquare = ({...prev});
             newSquare.isSelected = !prev.isSelected;
