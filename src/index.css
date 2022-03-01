@@ -238,6 +238,7 @@ a {
   height: 80px;
   width: 80px;
   border: .5px solid grey;
+  padding: .5px;
 }
 
 .mapSquareSelected {
@@ -248,12 +249,15 @@ a {
 .token {
   border-radius: 100%;
   background-color: darkgray;
-  height: 79px;
-  width: 79px;
-  margin: .5px;
+  height: 78px;
+  width: 78px;
 }
 
 .token > img{
-  height: 79px;
-  width: 79px;
+  height: 78px;
+  width: 78px;
+}
+
+.mapToken.selected {
+  border: 2px solid blue;
 }

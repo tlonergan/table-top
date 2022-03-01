@@ -1,10 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
 import { atom, useAtom } from 'jotai';
+
+import { selectMapToken, isSelectedMapTokenAtomCreator } from '../state/token';
+
 import Token from './token';
-import {v4 as uuid} from 'uuid';
 
 const MapToken = ({state, parentState}) => {
-    const id = useMemo(() => uuid(), [parentState]);
     const parentPositionAtom = useMemo(() => 
         atom(
             get => get(parentState).position
@@ -22,6 +23,9 @@ const MapToken = ({state, parentState}) => {
     const [mapToken, setMapToken] = useAtom(state);
     const [parentPosition] = useAtom(parentPositionAtom);
     const [, setParentContent] = useAtom(parentContentAtom);
+    const [isSelected] = useAtom(useMemo(() => isSelectedMapTokenAtomCreator(state), [state]));
+    const [, setSelected] = useAtom(selectMapToken);
+
     const [isInitialized, setIsInitialized] = useState(false);
     
     useEffect(() => {
@@ -44,8 +48,20 @@ const MapToken = ({state, parentState}) => {
             setParentContent(null);
     };
 
+    const onMapTokenClicked = (e) => {
+        e.stopPropagation();
+        if(isSelected){
+            setSelected(null);
+            return;
+        }
+
+        setSelected(state);
+    }
+
     return (
-        <Token state={mapToken.tokenAtom} mapTokenState={state}/>
+        <div onClick={onMapTokenClicked} className={"mapToken " + (isSelected ? "selected" : "")}>
+            <Token state={mapToken.tokenAtom} mapTokenState={state}/>
+        </div>
     );
 };
 

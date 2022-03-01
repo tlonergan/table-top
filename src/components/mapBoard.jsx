@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+
+import { removeSelectedMapToken } from '../state/token';
+
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 
@@ -10,11 +13,16 @@ const boardSquareAtomAtoms = atom([]);
 const MapBoard = () => {
     console.log("Re-render board");
     const [, setBoardSquareAtoms] = useAtom(boardSquareAtomAtoms);
+    const [, deleteMapToken] = useAtom(removeSelectedMapToken);
 
     const [squaresWide] = useState(25);
     const [squaresHigh] = useState(25);
 
     const [rows, setRows] = useState([]);
+
+    useEffect(() => {
+        window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
+      }, []);
 
     useEffect(() => setUpBoard(), [squaresWide, squaresHigh]);
 
@@ -41,6 +49,13 @@ const MapBoard = () => {
         setBoardSquareAtoms(squareAtoms);
         setRows(newRows);
     };
+
+    const onDeleteRemoveSelectedMapToken = (e) => {
+        if(e.keyCode !== 46 && e.keyCode !== 8)
+            return;
+
+        deleteMapToken(null);
+    }
 
     return (
         <DndProvider backend={HTML5Backend}>
