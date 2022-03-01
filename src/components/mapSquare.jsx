@@ -9,10 +9,12 @@ const MapSquare = ({state}) => {
 
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
-        drop: (item) => {
+        drop: ({item, mapTokenState}) => {
             setSquare(prev => {
                 let newSquare = ({...prev});
                 newSquare.tokenAtom = item;
+                newSquare.mapTokenAtom = mapTokenState;
+                
                 return newSquare;
             });
         },
@@ -29,9 +31,14 @@ const MapSquare = ({state}) => {
 
     const renderSquareContents = () => {
         let tokenAtom = square.tokenAtom;
-        const mapTokenAtom = atom({tokenAtom, position: square.postition});
-        if(tokenAtom)
-            return (<MapToken state={mapTokenAtom} parentState={state} />)
+        if(!tokenAtom)
+            return;
+
+        let mapTokenAtom = square.mapTokenAtom;
+        if(!mapTokenAtom)
+            mapTokenAtom = atom({tokenAtom, position: square.postition});
+            
+        return (<MapToken state={mapTokenAtom} parentState={state} />)
     };
 
     return (
