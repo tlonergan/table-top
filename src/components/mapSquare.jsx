@@ -1,18 +1,20 @@
 import { useDrop } from 'react-dnd';
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import DraggableItemTypes from '../entities/draggableTypes';
 
-import Token from './token';
+import MapToken from './mapToken';
 
 const MapSquare = ({state}) => {
     const [square, setSquare] = useAtom(state);
 
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
-        drop: (item) => {
+        drop: ({item, mapTokenState}) => {
             setSquare(prev => {
                 let newSquare = ({...prev});
                 newSquare.tokenAtom = item;
+                newSquare.mapTokenAtom = mapTokenState;
+                
                 return newSquare;
             });
         },
@@ -29,8 +31,14 @@ const MapSquare = ({state}) => {
 
     const renderSquareContents = () => {
         let tokenAtom = square.tokenAtom;
-        if(tokenAtom)
-            return (<Token state={tokenAtom} parentAtom={state} />)
+        if(!tokenAtom)
+            return;
+
+        let mapTokenAtom = square.mapTokenAtom;
+        if(!mapTokenAtom)
+            mapTokenAtom = atom({tokenAtom, position: square.postition});
+            
+        return (<MapToken state={mapTokenAtom} parentState={state} />)
     };
 
     return (

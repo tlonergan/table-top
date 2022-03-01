@@ -19,9 +19,9 @@ const TokenBox = () => {
         }, []);
         
     return (
-        <div>
+        <div className="tokenToolbox">
             {tokenAtoms.map(tokenAtom => {
-                return (<Token key={tokenAtom} state={tokenAtom} parentAtom={tokenBoxAtom} />)
+                return (<Token key={tokenAtom} state={tokenAtom} />)
             })}
         </div>
     );
