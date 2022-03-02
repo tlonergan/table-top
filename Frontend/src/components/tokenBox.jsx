@@ -4,15 +4,12 @@ import Token from "./token"
 import { getTokens } from '../api/tokenService';
 import { allTokenAtoms } from '../state/token';
 
-const tokenBoxAtom = atom({});
-
 const TokenBox = () => {
     const [tokenAtoms, setTokenAtoms] = useAtom(allTokenAtoms);
 
     useEffect(() => {
             let newTokenAttoms = getTokens().map(token => {
                 const tokenAtom = atom(token);
-                tokenAtom.debugLabel = new Date();
                 return tokenAtom;
             });
             setTokenAtoms([...newTokenAttoms]);

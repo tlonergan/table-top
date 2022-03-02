@@ -1,57 +1,57 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
 import { removeSelectedMapToken } from '../state/token';
+import { boardHubConnection, startHubConnection } from '../state/hubConnections';
+import keyCodes from '../entities/keyCodes';
 
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 
-const boardSquareAtomAtoms = atom([]);
-
 const MapBoard = () => {
     console.log("Re-render board");
-    const [, setBoardSquareAtoms] = useAtom(boardSquareAtomAtoms);
+    const movementConnection = useMemo(() => boardHubConnection, []);
+
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
 
     const [squaresWide] = useState(25);
     const [squaresHigh] = useState(25);
-
     const [rows, setRows] = useState([]);
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
       }, []);
 
-    useEffect(() => setUpBoard(), [squaresWide, squaresHigh]);
+    useEffect(() => {
+        startHubConnection(movementConnection)
+            .then (() => setUpBoard());
+    }, [squaresWide, squaresHigh]);
 
     const setUpBoard = () => {
         let newRows = [];
         let squareAtoms = [];
 
-        console.log("Re-drawing whole board");
+        console.log("Creating all Squares on board");
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
-
-                const boardSquareAtom = atom({position: {x: i, y: j}});
+                const boardSquareAtom = atom({position: {x: i, y: j}, contents: []});
                 boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
 
                 squareAtoms.push(boardSquareAtom);
-
-                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} />));
+                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
             }
     
             newRows.push((<div className="boardRow" key={"row" + i}>{columns}</div>));
         }
 
-        setBoardSquareAtoms(squareAtoms);
         setRows(newRows);
     };
 
     const onDeleteRemoveSelectedMapToken = (e) => {
-        if(e.keyCode !== 46 && e.keyCode !== 8)
+        if(e.keyCode !== keyCodes.DELETE && e.keyCode !== keyCodes.BACKSPACE)
             return;
 
         deleteMapToken(null);

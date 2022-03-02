@@ -2,51 +2,72 @@ import { useState, useEffect, useMemo } from 'react';
 import { atom, useAtom } from 'jotai';
 
 import { selectMapToken, isSelectedMapTokenAtomCreator } from '../state/token';
+import { boardHubConnection, startHubConnection, eventKeys } from '../state/hubConnections';
 
 import Token from './token';
 
 const MapToken = ({state, parentState}) => {
+    const movementConnection = useMemo(() => boardHubConnection, []);
     const parentPositionAtom = useMemo(() => 
         atom(
             get => get(parentState).position
         ), [parentState]);
-
-    const parentContentAtom = useMemo(() => atom(
+    const deleteFromParentAtom = useMemo(() => atom(
         null,
-        (get, set, updatedValue) => {
-            const previousParentState = get(parentState);
-            let newParentState = ({...previousParentState, tokenAtom: updatedValue});
-            set(parentState, newParentState);
+        (_get, set, _update) => {
+            set(parentState, (previous) => ({...previous, contents: previous.contents.filter((item) => item !== state)}));
         }
     ), [parentState]);
 
     const [mapToken, setMapToken] = useAtom(state);
+    const [token] = useAtom(mapToken.tokenAtom);
     const [parentPosition] = useAtom(parentPositionAtom);
-    const [, setParentContent] = useAtom(parentContentAtom);
+    const [,deleteThisFromParent] = useAtom(deleteFromParentAtom);
+
     const [isSelected] = useAtom(useMemo(() => isSelectedMapTokenAtomCreator(state), [state]));
     const [, setSelected] = useAtom(selectMapToken);
 
     const [isInitialized, setIsInitialized] = useState(false);
+    const [isMovementConnectionInitialized, setIsMovementConnectionInitialized] = useState(false);
     
     useEffect(() => {
+        startHubConnection(movementConnection)
+            .then(() => {
+                movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+                setIsMovementConnectionInitialized(true);
+            }); 
+
         setMapToken(prev => ({...prev, position: parentPosition}));
         setIsInitialized(true);
+
+        return () => {
+            movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+        };
     }, []);
 
     useEffect(() => {
-        if(!isInitialized)
-            return;
-
         updateParent();
-    }, [mapToken])
+    }, [mapToken]);
 
     const updateParent = () => {
+        if(!isInitialized || !isMovementConnectionInitialized)
+            return;
+            
         const mapTokenPosition = mapToken.position;
         if(!mapTokenPosition)
             return;
-        if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y)
-            setParentContent(null);
+
+        if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
+            deleteThisFromParent();
+            return;
+        }
     };
+
+    const onTokenMovedEvent = (position, mapTokenId) => {
+        console.log("MapToken signalr handler", position, mapTokenId)
+        if(mapToken.id === mapTokenId)
+            setMapToken(prev => ({...prev, position: position}));
+    }
 
     const onMapTokenClicked = (e) => {
         e.stopPropagation();
