@@ -36,7 +36,7 @@ export const mapTokens = atom(
     get => {
         const mapTokenAtoms = get(allMapTokenAtoms);
         const mapTokens = [];
-        mapTokenAtoms.forEach(mapTokenAtom => mapTokens.push(get(mapTokenAtom)));
+        mapTokenAtoms.forEach(mapTokenAtom => mapTokens.push(({...get(mapTokenAtom), atom: mapTokenAtom})));
         return mapTokens;
     }
 );

@@ -39,8 +39,6 @@ const MapToken = ({state, parentState}) => {
 
         setMapToken(prev => ({...prev, position: parentPosition}));
         setIsInitialized(true);
-        
-        movementConnection.invoke("MoveToken", mapToken.position, mapToken.id, token.id);
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -61,13 +59,14 @@ const MapToken = ({state, parentState}) => {
 
         if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
             deleteThisFromParent();
+            return;
         }
     };
 
     const onTokenMovedEvent = (position, mapTokenId) => {
         console.log("MapToken signalr handler", position, mapTokenId)
-        // if(mapToken.id === mapTokenId)
-        //     setMapToken(prev => ({...prev, position: position}));
+        if(mapToken.id === mapTokenId)
+            setMapToken(prev => ({...prev, position: position}));
     }
 
     const onMapTokenClicked = (e) => {

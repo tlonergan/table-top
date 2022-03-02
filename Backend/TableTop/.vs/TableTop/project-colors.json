@@ -1,0 +1,21 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "f2ad177c-14a7-47dc-94fb-785182a17311": {
+      "ProjectGuid": "f2ad177c-14a7-47dc-94fb-785182a17311",
+      "DisplayName": "TableTop",
+      "ColorIndex": 0
+    },
+    "679b3c57-36ab-402f-b5b5-152901a3b98b": {
+      "ProjectGuid": "679b3c57-36ab-402f-b5b5-152901a3b98b",
+      "DisplayName": "TableTop.Service",
+      "ColorIndex": 1
+    },
+    "bdb5a579-b4ac-46c2-b8ad-a4d1abaf8234": {
+      "ProjectGuid": "bdb5a579-b4ac-46c2-b8ad-a4d1abaf8234",
+      "DisplayName": "TableTop.Entities",
+      "ColorIndex": 2
+    }
+  },
+  "NextColorIndex": 3
+}
