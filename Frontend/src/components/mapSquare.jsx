@@ -29,7 +29,7 @@ const MapSquare = ({state, movementConnection}) => {
         drop: ({mapTokenAtom, tokenAtom}) => {
             if(!mapTokenAtom) {
                 mapTokenAtom = createMapToken(square.position, tokenAtom);
-                addMapTokenAtom(newMapToken); //this will trigger every square to render
+                addMapTokenAtom(mapTokenAtom); //this will trigger every square to render
             }
 
             setSquare(previous => ({...previous, contents: [...previous.contents, mapTokenAtom]}));
