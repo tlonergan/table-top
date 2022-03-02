@@ -1,0 +1,12 @@
+D:\src\table-top\Backend\TableTop\TableTop.Entities\bin\Debug\net6.0\TableTop.Entities.deps.json
+D:\src\table-top\Backend\TableTop\TableTop.Entities\bin\Debug\net6.0\TableTop.Entities.dll
+D:\src\table-top\Backend\TableTop\TableTop.Entities\bin\Debug\net6.0\ref\TableTop.Entities.dll
+D:\src\table-top\Backend\TableTop\TableTop.Entities\bin\Debug\net6.0\TableTop.Entities.pdb
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.csproj.AssemblyReference.cache
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.GeneratedMSBuildEditorConfig.editorconfig
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.AssemblyInfoInputs.cache
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.AssemblyInfo.cs
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.csproj.CoreCompileInputs.cache
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.dll
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\ref\TableTop.Entities.dll
+D:\src\table-top\Backend\TableTop\TableTop.Entities\obj\Debug\net6.0\TableTop.Entities.pdb

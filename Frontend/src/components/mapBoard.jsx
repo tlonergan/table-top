@@ -4,8 +4,8 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 
 import { removeSelectedMapToken } from '../state/token';
-import keyCodes from '../entities/keyCodes';
 import { boardHubConnection, startHubConnection } from '../state/hubConnections';
+import keyCodes from '../entities/keyCodes';
 
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
@@ -41,8 +41,7 @@ const MapBoard = () => {
         for (let i = 0; i < squaresHigh; i++) {
             let columns = [];
             for (let j = 0; j < squaresWide; j++) {
-
-                const boardSquareAtom = atom({position: {x: i, y: j}});
+                const boardSquareAtom = atom({position: {x: i, y: j}, contents: []});
                 boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
 
                 squareAtoms.push(boardSquareAtom);

@@ -14,59 +14,60 @@ const MapToken = ({state, parentState}) => {
         atom(
             get => get(parentState).position
         ), [parentState]);
-    const parentContentAtom = useMemo(() => atom(
+    const deleteFromParentAtom = useMemo(() => atom(
         null,
-        (get, set, updatedValue) => {
-            const previousParentState = get(parentState);
-            let newParentState = ({...previousParentState, tokenAtom: updatedValue});
-            set(parentState, newParentState);
+        (_get, set, _update) => {
+            set(parentState, (previous) => ({...previous, contents: previous.contents.filter((item) => item !== state)}));
         }
     ), [parentState]);
 
     const [mapToken, setMapToken] = useAtom(state);
-    const [token] = useAtom(mapToken.tokenAtom);
     const [parentPosition] = useAtom(parentPositionAtom);
-    const [, setParentContent] = useAtom(parentContentAtom);
+    const [,deleteThisFromParent] = useAtom(deleteFromParentAtom);
+
     const [isSelected] = useAtom(useMemo(() => isSelectedMapTokenAtomCreator(state), [state]));
     const [, setSelected] = useAtom(selectMapToken);
 
     const [isInitialized, setIsInitialized] = useState(false);
     const [isMovementConnectionInitialized, setIsMovementConnectionInitialized] = useState(false);
     
-    useEffect(() => {      
+    useEffect(() => {  
+        console.log("useEffect []");
+        
         startHubConnection(movementConnection)
             .then(() => {
                 movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
                 setIsMovementConnectionInitialized(true);
-                setMapToken(prev => ({...prev, position: parentPosition}));
-                setIsInitialized(true);
             }); 
+
+        setMapToken(prev => ({...prev, position: parentPosition}));
+        setIsInitialized(true);
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
         };
     }, []);
 
-    // useEffect(() => {
-    //     console.log("useEffect [isInitialized, isMovementConnectionInitialized, mapToken]")
-    //     updateParent();
-    // }, [isInitialized, isMovementConnectionInitialized, mapToken]);
+    useEffect(() => {
+        console.log("useEffect [isInitialized, isMovementConnectionInitialized, mapToken]", isInitialized, isMovementConnectionInitialized, mapToken)
+        updateParent();
+    }, [mapToken]);
 
-    // const updateParent = () => {
-    //     if(!isInitialized || !isMovementConnectionInitialized)
-    //         return;
+    const updateParent = () => {
+        if(!isInitialized || !isMovementConnectionInitialized)
+            return;
             
-    //     const mapTokenPosition = mapToken.position;
-    //     if(!mapTokenPosition)
-    //         return;
+        const mapTokenPosition = mapToken.position;
+        if(!mapTokenPosition)
+            return;
 
-    //     console.log("updateParent", mapTokenPosition);
+        console.log("updateParent", mapTokenPosition, parentPosition);
 
-    //     if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
-    //         // movementConnection.invoke("MoveToken", mapToken.position, mapToken.id, tokenId);
-    //         setParentContent(null);
-    //     }
-    // };
+        if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
+            console.log("Deleting MapToken from parent");
+            deleteThisFromParent();
+        }
+    };
 
     const onTokenMovedEvent = (position, mapTokenId) => {
         if(mapToken.id === mapTokenId)
