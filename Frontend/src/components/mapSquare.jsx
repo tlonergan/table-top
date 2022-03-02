@@ -41,19 +41,20 @@ const MapSquare = ({state, movementConnection}) => {
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
 
-        // const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
-        const mapTokens = await getMapTokens();
-        if(existingMapToken)
-            return;
-        
-        const token = tokens.find(t => t.id === tokenId);
-        if(!token){
-            console.log("Could not find token");
-            return;
-        }
+        getMapTokens().then((mapTokens) => {
+            const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
+            if(existingMapToken)
+                return;
+            
+            const token = tokens.find(t => t.id === tokenId);
+            if(!token){
+                console.log("Could not find token");
+                return;
+            }
 
-        const newMapToken = createMapToken(square.position, token.atom, mapTokenId);
-        addMapTokenAtom(newMapToken); //this will trigger every square to render
+            const newMapToken = createMapToken(square.position, token.atom, mapTokenId);
+            addMapTokenAtom(newMapToken); //this will trigger every square to render
+        });
     };
  
     const onSquaredClicked = () => {
