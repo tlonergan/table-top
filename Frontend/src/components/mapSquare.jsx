@@ -54,7 +54,7 @@ const MapSquare = ({state, movementConnection}) => {
             }
 
             const newMapToken = createMapToken(square.position, token.atom, mapTokenId);
-            addMapTokenAtom(newMapToken); //this will trigger every square to render
+            addMapToken(newMapToken); //this will trigger every square to render
         });
     };
  
