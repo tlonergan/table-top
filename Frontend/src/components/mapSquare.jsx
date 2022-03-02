@@ -5,11 +5,13 @@ import {  useAtom } from 'jotai';
 import DraggableItemTypes from '../entities/draggableTypes';
 import { createMapToken, createSquareContentAtom, addMapTokenAtom } from '../state/board';
 import { eventKeys } from '../state/hubConnections';
+import { tokensAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
 const MapSquare = ({state, movementConnection}) => {
     const [square, setSquare] = useAtom(state);
+    const [tokens] = useAtom(tokensAtom);
 
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -33,6 +35,9 @@ const MapSquare = ({state, movementConnection}) => {
             return;
 
         console.log("MapSquare signalr handler", squarePosition, position, mapTokenId, tokenId);
+
+        //Need to know if MapToken is already on the board, if so, ignore
+        //If not, need to be able to resolve tokenAtom...
     };
  
     const onSquaredClicked = () => {
