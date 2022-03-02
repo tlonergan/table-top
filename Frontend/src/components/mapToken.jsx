@@ -7,8 +7,6 @@ import { boardHubConnection, startHubConnection, eventKeys } from '../state/hubC
 import Token from './token';
 
 const MapToken = ({state, parentState}) => {
-    console.log("Render MapToken");
-
     const movementConnection = useMemo(() => boardHubConnection, []);
     const parentPositionAtom = useMemo(() => 
         atom(
@@ -22,6 +20,7 @@ const MapToken = ({state, parentState}) => {
     ), [parentState]);
 
     const [mapToken, setMapToken] = useAtom(state);
+    const [token] = useAtom(mapToken.tokenAtom);
     const [parentPosition] = useAtom(parentPositionAtom);
     const [,deleteThisFromParent] = useAtom(deleteFromParentAtom);
 
@@ -31,9 +30,7 @@ const MapToken = ({state, parentState}) => {
     const [isInitialized, setIsInitialized] = useState(false);
     const [isMovementConnectionInitialized, setIsMovementConnectionInitialized] = useState(false);
     
-    useEffect(() => {  
-        console.log("useEffect []");
-        
+    useEffect(() => {
         startHubConnection(movementConnection)
             .then(() => {
                 movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -42,6 +39,8 @@ const MapToken = ({state, parentState}) => {
 
         setMapToken(prev => ({...prev, position: parentPosition}));
         setIsInitialized(true);
+        
+        movementConnection.invoke("MoveToken", mapToken.position, mapToken.id, token.id);
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -49,7 +48,6 @@ const MapToken = ({state, parentState}) => {
     }, []);
 
     useEffect(() => {
-        console.log("useEffect [isInitialized, isMovementConnectionInitialized, mapToken]", isInitialized, isMovementConnectionInitialized, mapToken)
         updateParent();
     }, [mapToken]);
 
@@ -61,17 +59,15 @@ const MapToken = ({state, parentState}) => {
         if(!mapTokenPosition)
             return;
 
-        console.log("updateParent", mapTokenPosition, parentPosition);
-
         if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
-            console.log("Deleting MapToken from parent");
             deleteThisFromParent();
         }
     };
 
     const onTokenMovedEvent = (position, mapTokenId) => {
-        if(mapToken.id === mapTokenId)
-            setMapToken(prev => ({...prev, position: position}));
+        console.log("MapToken signalr handler", position, mapTokenId)
+        // if(mapToken.id === mapTokenId)
+        //     setMapToken(prev => ({...prev, position: position}));
     }
 
     const onMapTokenClicked = (e) => {

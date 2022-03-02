@@ -11,8 +11,6 @@ import MapToken from './mapToken';
 const MapSquare = ({state, movementConnection}) => {
     const [square, setSquare] = useAtom(state);
 
-    console.log("Render MapSquare", square.position);
-
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
     }, []);
@@ -21,19 +19,20 @@ const MapSquare = ({state, movementConnection}) => {
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
         drop: ({mapTokenAtom, tokenAtom}) => {
-            
-            console.log("Dropped Token", square.position);
-
             if(!mapTokenAtom) {
                 mapTokenAtom = createMapToken(square.position, tokenAtom);
             }
 
             setSquare(previous => ({...previous, contents: [...previous.contents, mapTokenAtom]}));
-            // movementConnection.invoke("MoveToken", mapToken.position, mapToken.id, tokenId);
         },
     }));
 
     const onTokenMovedEvent = (position, mapTokenId, tokenId) => {
+        const squarePosition = square.position;
+        if(squarePosition.x !== position.x || squarePosition.y !== position.y)
+            return;
+
+        console.log("MapSquare signalr handler", squarePosition, position, mapTokenId, tokenId);
     };
  
     const onSquaredClicked = () => {

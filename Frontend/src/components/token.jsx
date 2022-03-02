@@ -2,9 +2,7 @@ import { useAtom } from 'jotai';
 import { useDrag } from 'react-dnd';
 import DraggableItemTypes from "../entities/draggableTypes";
 
-const Token = ({state, mapTokenState}) => {
-    console.log("Render token");
-    
+const Token = ({state, mapTokenState}) => {    
     const [token] = useAtom(state);
 
     const [, drag] = useDrag(() =>({

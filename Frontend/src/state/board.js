@@ -16,15 +16,13 @@ export const createMapToken = (position, tokenAtom, mapTokenId) => {
 export const addMapTokenAtom = atom(
     null,
     (get, set, updatedItem) => {
-        console.log("addMapTokenAtom Setter");
         const previousMapTokenAtoms = get(allMapTokenAtoms);
         const matchingAtom = previousMapTokenAtoms.find((mapTokenAtom) => {
             const newMapToken = get(updatedItem);
             const previousMapToken = get(mapTokenAtom);
             return previousMapToken.id === newMapToken.id;
         });
-
-        console.log("addMapTokenAtom Setter", matchingAtom);
+        
         if(!matchingAtom)
             set(allMapTokenAtoms, [...previousMapTokenAtoms, updatedItem]);
     }
