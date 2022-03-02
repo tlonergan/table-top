@@ -15,6 +15,7 @@ const mapTokens = [];
 const MapSquare = ({state, movementConnection}) => {
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
+    const [,addMapToken] = useAtom(addMapTokenAtom);
     const getMapTokens = useAtomCallback(useCallback(
         get => get(mapTokensAtom)
     ));
@@ -29,7 +30,7 @@ const MapSquare = ({state, movementConnection}) => {
         drop: ({mapTokenAtom, tokenAtom}) => {
             if(!mapTokenAtom) {
                 mapTokenAtom = createMapToken(square.position, tokenAtom);
-                addMapTokenAtom(mapTokenAtom); //this will trigger every square to render
+                addMapToken(mapTokenAtom); //this will trigger every square to render
             }
 
             setSquare(previous => ({...previous, contents: [...previous.contents, mapTokenAtom]}));
