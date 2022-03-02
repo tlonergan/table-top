@@ -20,7 +20,6 @@ const MapToken = ({state, parentState}) => {
     ), [parentState]);
 
     const [mapToken, setMapToken] = useAtom(state);
-    const [token] = useAtom(mapToken.tokenAtom);
     const [parentPosition] = useAtom(parentPositionAtom);
     const [,deleteThisFromParent] = useAtom(deleteFromParentAtom);
 
@@ -34,6 +33,12 @@ const MapToken = ({state, parentState}) => {
         startHubConnection(movementConnection)
             .then(() => {
                 movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+                movementConnection.on(eventKeys.movement.TOKEN_DELETED, (mapTokenId) => {
+                    if(mapToken.id !== mapTokenId)
+                        return;
+
+                    deleteThisFromParent();
+                });
                 setIsMovementConnectionInitialized(true);
             }); 
 
@@ -58,6 +63,7 @@ const MapToken = ({state, parentState}) => {
             return;
 
         if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
+            movementConnection.invoke(eventKeys.movement.DELETE_TOKEN, mapToken.id);
             deleteThisFromParent();
             return;
         }
