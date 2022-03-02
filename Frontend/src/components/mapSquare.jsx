@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
 import {  useAtom } from 'jotai';
+import { useAtomCallback } from 'jotai/utils';
 
 import DraggableItemTypes from '../entities/draggableTypes';
 import { createMapToken, mapTokens as mapTokensAtom, addMapTokenAtom } from '../state/board';
@@ -9,10 +10,14 @@ import { tokensAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
+const mapTokens = [];
+
 const MapSquare = ({state, movementConnection}) => {
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
-    const [mapTokens] = useAtom(mapTokensAtom);
+    const getMapTokens = useAtomCallback(useCallback(
+        get => get(mapTokensAtom)
+    ));
 
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -36,7 +41,8 @@ const MapSquare = ({state, movementConnection}) => {
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
 
-        const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
+        // const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
+        const mapTokens = await getMapTokens();
         if(existingMapToken)
             return;
         
