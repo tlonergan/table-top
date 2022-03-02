@@ -3,7 +3,7 @@ import { useDrop } from 'react-dnd';
 import {  useAtom } from 'jotai';
 
 import DraggableItemTypes from '../entities/draggableTypes';
-import { createMapToken, createSquareContentAtom, addMapTokenAtom } from '../state/board';
+import { createMapToken, mapTokens as mapTokensAtom, addMapTokenAtom } from '../state/board';
 import { eventKeys } from '../state/hubConnections';
 import { tokensAtom } from '../state/token';
 
@@ -12,6 +12,7 @@ import MapToken from './mapToken';
 const MapSquare = ({state, movementConnection}) => {
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
+    const [mapTokens] = useAtom(mapTokensAtom);
 
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -36,8 +37,18 @@ const MapSquare = ({state, movementConnection}) => {
 
         console.log("MapSquare signalr handler", squarePosition, position, mapTokenId, tokenId);
 
-        //Need to know if MapToken is already on the board, if so, ignore
-        //If not, need to be able to resolve tokenAtom...
+        const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
+        if(existingMapToken)
+            return;
+        
+        const token = tokens.find(t => t.id === tokenId);
+        if(!token){
+            console.log("Could not find token");
+            return;
+        }
+
+        const newMapToken = createMapToken(square.position, token.atom, mapTokenId);
+        addMapTokenAtom(newMapToken); //this will trigger every square to render
     };
  
     const onSquaredClicked = () => {

@@ -1,6 +1,5 @@
 import { atom } from 'jotai';
 import { v4 as uuid } from 'uuid';
-import { selectMapToken } from './token';
 
 const allMapTokenAtoms = atom([]);
 
@@ -28,19 +27,11 @@ export const addMapTokenAtom = atom(
     }
 )
 
-export const createSquareContentAtom = (squareAtom) => atom(
+export const mapTokens = atom(
     get => {
-        const squarePosition = get(squareAtom).position;
         const mapTokenAtoms = get(allMapTokenAtoms);
-
-        let squaresMapTokens = [];
-        mapTokenAtoms.forEach(mapTokenAtom => {
-            const mapToken = get(mapTokenAtom);
-            const mapTokenPosition = mapToken.position;
-            if(mapTokenPosition.x == squarePosition.x && mapTokenPosition.y == squarePosition.y)
-                squaresMapTokens.push(mapTokenAtom);
-        });
-
-        return squaresMapTokens;
+        const mapTokens = [];
+        mapTokenAtoms.forEach(mapTokenAtom => mapTokens.push(get(mapTokenAtom)));
+        return mapTokens;
     }
-)
+);
