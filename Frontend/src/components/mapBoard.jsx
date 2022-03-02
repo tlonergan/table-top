@@ -10,18 +10,14 @@ import keyCodes from '../entities/keyCodes';
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 
-const boardSquareAtomAtoms = atom([]);
-
 const MapBoard = () => {
     console.log("Re-render board");
     const movementConnection = useMemo(() => boardHubConnection, []);
 
-    const [, setBoardSquareAtoms] = useAtom(boardSquareAtomAtoms);
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
 
     const [squaresWide] = useState(25);
     const [squaresHigh] = useState(25);
-
     const [rows, setRows] = useState([]);
 
     useEffect(() => {
@@ -45,14 +41,12 @@ const MapBoard = () => {
                 boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
 
                 squareAtoms.push(boardSquareAtom);
-
                 columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
             }
     
             newRows.push((<div className="boardRow" key={"row" + i}>{columns}</div>));
         }
 
-        setBoardSquareAtoms(squareAtoms);
         setRows(newRows);
     };
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDrop } from 'react-dnd';
 import {  useAtom } from 'jotai';
 
@@ -24,6 +24,7 @@ const MapSquare = ({state, movementConnection}) => {
         drop: ({mapTokenAtom, tokenAtom}) => {
             if(!mapTokenAtom) {
                 mapTokenAtom = createMapToken(square.position, tokenAtom);
+                addMapTokenAtom(newMapToken); //this will trigger every square to render
             }
 
             setSquare(previous => ({...previous, contents: [...previous.contents, mapTokenAtom]}));
@@ -34,8 +35,6 @@ const MapSquare = ({state, movementConnection}) => {
         const squarePosition = square.position;
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
-
-        console.log("MapSquare signalr handler", squarePosition, position, mapTokenId, tokenId);
 
         const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
         if(existingMapToken)

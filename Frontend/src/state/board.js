@@ -27,6 +27,11 @@ export const addMapTokenAtom = atom(
     }
 )
 
+export const setAllMapTokensAtom = atom(
+    null,
+    (_get, set, updatedItem) => set(allMapTokenAtoms, updatedItem)
+);
+
 export const mapTokens = atom(
     get => {
         const mapTokenAtoms = get(allMapTokenAtoms);
