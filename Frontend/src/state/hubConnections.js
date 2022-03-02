@@ -17,6 +17,8 @@ export const startHubConnection = (connection) => {
 export const eventKeys = {
     movement: {
         TOKEN_MOVED: "TokenMoved",
-        MOVE_TOKEN: "MoveToken"
+        MOVE_TOKEN: "MoveToken",
+        TOKEN_DELETED: "TokenDeleted",
+        DELETE_TOKEN: "DeleteToken",
     }
 };

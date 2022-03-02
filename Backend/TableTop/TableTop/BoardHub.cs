@@ -9,4 +9,9 @@ public class BoardHub : Hub
     {
         await Clients.All.SendAsync("TokenMoved", tokenPosition, mapTokenId, tokenId);
     }
+
+    public async Task DeleteToken(Guid mapTokenId)
+    {
+        await Clients.All.SendAsync("TokenDeleted", mapTokenId);
+    }
 }
