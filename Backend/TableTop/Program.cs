@@ -1,8 +1,10 @@
 
 using TableTop;
+using TableTop.Entities.Configuration;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<Settings>();
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
@@ -22,6 +24,8 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Configuration.AddEnvironmentVariables();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +34,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Settings? settings = app.Services.GetService<Settings>();
+app.Configuration.Bind(settings);
 
 app.UseHttpsRedirection();
 
