@@ -506,4 +506,4 @@ FodyWeavers.xsd
 *.sln.iml
 
 
-*/launchSettings.json
+**/launchSettings.json
