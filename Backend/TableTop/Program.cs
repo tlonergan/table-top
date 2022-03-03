@@ -1,10 +1,12 @@
 
 using TableTop;
 using TableTop.Entities.Configuration;
+using TableTop.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddSingleton<Settings>();
+StorageRegistrar.Register(builder.Services);
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
