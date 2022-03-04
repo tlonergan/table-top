@@ -2,11 +2,13 @@ import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
+import { withAuthenticationRequired } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
 import { boardHubConnection, startHubConnection } from '../state/hubConnections';
 import keyCodes from '../entities/keyCodes';
 
+import Loading from './loading';
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 
@@ -68,4 +70,7 @@ const MapBoard = () => {
         </DndProvider>);
 };
 
-export default MapBoard;
+export default withAuthenticationRequired(
+    MapBoard,
+    { onRedirecting: () => <Loading/>}
+);
