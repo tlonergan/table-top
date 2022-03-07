@@ -7,61 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="App\.env" />
-    <None Remove="App\assets\CopperDragon.png" />
-    <None Remove="App\assets\TombGuardian.png" />
-    <None Remove="App\favicon.ico" />
-    <None Remove="App\index.html" />
-    <None Remove="App\logo192.png" />
-    <None Remove="App\logo512.png" />
-    <None Remove="App\robots.txt" />
-    <None Remove="App\static\css\main.a42f7bc1.css" />
-    <None Remove="App\static\js\787.83b7ca06.chunk.js" />
-    <None Remove="App\static\js\main.c939bf11.js" />
-    <None Remove="App\static\js\main.c939bf11.js.LICENSE.txt" />
-    <None Remove="App\static\media\logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg" />
+    <Content Include="App\**">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="App\.env">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\assets\CopperDragon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\assets\TombGuardian.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\favicon.ico">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\index.html">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\logo192.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\logo512.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\robots.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\static\css\main.a42f7bc1.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\static\js\787.83b7ca06.chunk.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\static\js\main.c939bf11.js">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\static\js\main.c939bf11.js.LICENSE.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="App\static\media\logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Remove="App\asset-manifest.json" />
+    <Content Remove="App\manifest.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="App\asset-manifest.json" />
+    <None Include="App\manifest.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -70,15 +28,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TableTop.Entities\TableTop.Entities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Update="App\asset-manifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Update="App\manifest.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
   </ItemGroup>
 
 </Project>
