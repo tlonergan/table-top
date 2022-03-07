@@ -39,10 +39,12 @@ app.UseAuthorization();
 
 PhysicalFileProvider physicalFileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "App"));
 var contents = physicalFileProvider.GetDirectoryContents(string.Empty);
+Console.WriteLine("Files in './App'");
 foreach (IFileInfo content in contents)
 {
     Console.WriteLine(content.Name);
 }
+
 StaticFileOptions staticFileOptions = new StaticFileOptions { FileProvider = physicalFileProvider, RequestPath = "" };
 app.UseStaticFiles(staticFileOptions);
 
