@@ -103,6 +103,7 @@ dist
 # TernJS port file
 .tern-port
 
+FrontEnd/build
 
 
 # .NET
@@ -507,3 +508,4 @@ FodyWeavers.xsd
 
 
 **/launchSettings.json
+Backend/TableTop/App/**
