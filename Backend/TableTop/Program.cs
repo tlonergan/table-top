@@ -1,4 +1,4 @@
-
+using Microsoft.Extensions.FileProviders;
 using TableTop;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -36,6 +36,11 @@ app.UseHttpsRedirection();
 app.UseCors("ClientPermissions");
 
 app.UseAuthorization();
+
+PhysicalFileProvider physicalFileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "App"));
+var contents = physicalFileProvider.GetDirectoryContents(string.Empty);
+StaticFileOptions staticFileOptions = new StaticFileOptions { FileProvider = physicalFileProvider, RequestPath = "" };
+app.UseStaticFiles(staticFileOptions);
 
 app.MapControllers();
 app.MapHub<BoardHub>("/board-hub");
