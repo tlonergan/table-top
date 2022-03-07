@@ -22,7 +22,7 @@ steps:
     publishWebProjects: true
 - task: AzureWebApp@1
   inputs:
-    azureSubscription: '<Azure service connection>'
+    azureSubscription: 'Azure subscription 1'
     appType: 'webAppLinux'
     appName: 'table-top-map'
     package: '$(System.DefaultWorkingDirectory)/**/*.zip'
