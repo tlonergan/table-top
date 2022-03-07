@@ -15,6 +15,7 @@ variables:
 steps:
 - script: |
     npm install &&
+    mv -f ./src/env.production.json ./src/env.json
     npm run build && 
     cp -R ./build ../Backend/TableTop/App
   workingDirectory: Frontend
