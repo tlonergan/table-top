@@ -71,6 +71,9 @@ const MapToken = ({state, parentState}) => {
     }
 
     const onTokenDeletedEvent = (deletedMapToken) => {
+        if(mapToken.id !== deletedMapToken.id)
+            return;
+
         const mapTokenPosition = mapToken.position;
         const deletedMapTokenPosition = deletedMapToken.position;
         if(!mapTokenPosition || !deletedMapTokenPosition)
