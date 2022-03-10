@@ -59,15 +59,13 @@ const MapToken = ({state, parentState}) => {
             return;
 
         if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
-            console.log("UpdateParent => Deleting", mapTokenPosition, parentPosition)
             movementConnection.invoke(eventKeys.movement.DELETE_TOKEN, mapToken);
-            // deleteThisFromParent();
+            deleteThisFromParent();
             return;
         }
     };
 
     const onTokenMovedEvent = (position, mapTokenId) => {
-        console.log("MapToken signalr handler", position, mapTokenId)
         if(mapToken.id === mapTokenId)
             setMapToken(prev => ({...prev, position: position}));
     }
@@ -79,8 +77,6 @@ const MapToken = ({state, parentState}) => {
             return; 
         if(mapTokenPosition.x === deletedMapTokenPosition.x && mapTokenPosition.y === deletedMapTokenPosition.y)
             return;
-
-        console.log("MapToken => Deleted Event", mapTokenPosition, deletedMapTokenPosition);
 
         deleteThisFromParent();
     };

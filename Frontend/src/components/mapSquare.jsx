@@ -28,7 +28,6 @@ const MapSquare = ({state, movementConnection}) => {
     const [,thisMapSquare] = useDrop(() => ({
         accept: DraggableItemTypes.TOKEN,
         drop: ({mapTokenAtom, tokenAtom}) => {
-            console.log("MapSquare => Drop")
             const existingContent = getExistingContent(mapTokenAtom)
             if(existingContent)
                 return;
@@ -37,13 +36,10 @@ const MapSquare = ({state, movementConnection}) => {
                 mapTokenAtom = createMapToken(square.position, tokenAtom);
                 addMapToken(mapTokenAtom);
             }
-
-            console.log("MapSquare => Drop - after checks");
+            
             getMapTokens().then(mapTokens => {
                 const mapToken = mapTokens.find(mapToken => mapToken.atom == mapTokenAtom);
                 const token = tokens.find(token => token.atom == tokenAtom);
-    
-                console.log("MapSquare => Drop => getMapToken.then", mapToken, token);
     
                 if(!mapToken)
                     return;
@@ -60,8 +56,6 @@ const MapSquare = ({state, movementConnection}) => {
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
 
-        console.log("onTokenMovedEvent - this position");
-
         getMapTokens().then((mapTokens) => {
             const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
             if(!existingMapToken){
@@ -69,34 +63,32 @@ const MapSquare = ({state, movementConnection}) => {
                 if(!token){
                     return;
                 }
-    
+                
                 const newMapToken = createMapToken(square.position, token.atom, mapTokenId);
                 addMapToken(newMapToken);
                 addContent(newMapToken);
                 return;
             }
 
-            const mapTokenAtom = existingMapToken.atom;
-            const existingContent = getExistingContent(mapTokenAtom)
-
-            console.log("onTokenMovedEvent => getMapTokens.then", existingContent);
-            if(existingContent)
-                return;
-                
+            const mapTokenAtom = existingMapToken.atom;                
             addContent(mapTokenAtom);
-
         });
     };
 
     const getExistingContent = (content) => square.contents.find(existingContent => existingContent === content);
 
-    const addContent = (content) => {
-        const existingContent = getExistingContent(content);
-        console.log("MapSquare => addContent", content, existingContent);
-        if(existingContent)
-            return;
-            
-        setSquare(previous => ({...previous, contents: [...previous.contents, content]}));
+    const addContent = (content) => {        
+        setSquare(previous => {
+            const previousContents = previous.contents;
+            if(!previousContents)
+                return ({...previous});
+
+            const existingMapToken = previousContents.find(existingContent => existingContent === content);
+            if(existingMapToken)
+                return ({...previous});
+
+            return ({...previous, contents: [...previousContents, content]})
+        });
     };
  
     const onSquaredClicked = () => {
