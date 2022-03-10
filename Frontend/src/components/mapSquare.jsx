@@ -12,14 +12,14 @@ import MapToken from './mapToken';
 
 const MapSquare = ({state, movementConnection}) => {
     console.log("MapSquare Render");
-
+    
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
     const [,addMapToken] = useAtom(addMapTokenAtom);
     const getMapTokens = useAtomCallback(useCallback(
         get => get(mapTokensAtom)
     ));
-
+    
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
     }, []);
@@ -91,8 +91,8 @@ const MapSquare = ({state, movementConnection}) => {
     const getExistingContent = (content) => square.contents.find(existingContent => existingContent === content);
 
     const addContent = (content) => {
-        console.log("addContent", content);
         const existingContent = getExistingContent(content);
+        console.log("MapSquare => addContent", content, existingContent);
         if(existingContent)
             return;
             

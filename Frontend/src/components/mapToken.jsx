@@ -33,12 +33,7 @@ const MapToken = ({state, parentState}) => {
         startHubConnection(movementConnection)
             .then(() => {
                 movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
-                movementConnection.on(eventKeys.movement.TOKEN_DELETED, (mapTokenId) => {
-                    if(mapToken.id !== mapTokenId)
-                        return;
-
-                    deleteThisFromParent();
-                });
+                movementConnection.on(eventKeys.movement.TOKEN_DELETED, onTokenDeletedEvent);
                 setIsMovementConnectionInitialized(true);
             }); 
 
@@ -47,6 +42,7 @@ const MapToken = ({state, parentState}) => {
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+            movementConnection.off(eventKeys.movement.TOKEN_DELETED, onTokenDeletedEvent);
         };
     }, []);
 
@@ -63,8 +59,9 @@ const MapToken = ({state, parentState}) => {
             return;
 
         if(mapTokenPosition.x !== parentPosition.x || mapTokenPosition.y !== parentPosition.y){
-            movementConnection.invoke(eventKeys.movement.DELETE_TOKEN, mapToken.id);
-            deleteThisFromParent();
+            console.log("UpdateParent => Deleting", mapTokenPosition, parentPosition)
+            movementConnection.invoke(eventKeys.movement.DELETE_TOKEN, mapToken);
+            // deleteThisFromParent();
             return;
         }
     };
@@ -74,6 +71,19 @@ const MapToken = ({state, parentState}) => {
         if(mapToken.id === mapTokenId)
             setMapToken(prev => ({...prev, position: position}));
     }
+
+    const onTokenDeletedEvent = (deletedMapToken) => {
+        const mapTokenPosition = mapToken.position;
+        const deletedMapTokenPosition = deletedMapToken.position;
+        if(!mapTokenPosition || !deletedMapTokenPosition)
+            return; 
+        if(mapTokenPosition.x === deletedMapTokenPosition.x && mapTokenPosition.y === deletedMapTokenPosition.y)
+            return;
+
+        console.log("MapToken => Deleted Event", mapTokenPosition, deletedMapTokenPosition);
+
+        deleteThisFromParent();
+    };
 
     const onMapTokenClicked = (e) => {
         e.stopPropagation();
