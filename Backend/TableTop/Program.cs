@@ -1,20 +1,24 @@
 using Microsoft.Extensions.FileProviders;
 using TableTop;
 using TableTop.Entities.Configuration;
+using TableTop.Service;
 using TableTop.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<Settings>();
-StorageRegistrar.Register(builder.Services);
+IServiceCollection services = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddSignalR();
+services.AddSingleton<Settings>();
+ServiceRegistrar.Register(services);
+StorageRegistrar.Register(services);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddControllers();
+services.AddSignalR();
 
-builder.Services.AddCors(options =>
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+
+services.AddCors(options =>
 {
     options.AddPolicy("ClientPermissions",
                       policy =>
