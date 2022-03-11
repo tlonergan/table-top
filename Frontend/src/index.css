@@ -1,3 +1,7 @@
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -224,14 +228,15 @@ a {
 }
 
 .board {
+  width: 100%;
   padding: 64px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-content: center;
 }
 
 .boardRow {
-  display: flex;
-  flex-direction: row;
+  display: block;
 }
 
 .mapSquare {

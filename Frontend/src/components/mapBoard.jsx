@@ -46,7 +46,7 @@ const MapBoard = () => {
                 columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
             }
     
-            newRows.push((<div className="boardRow" key={"row" + i}>{columns}</div>));
+            newRows.push((<><div className="boardRow" key={"row" + i}>{columns}</div><br/></>));
         }
 
         setRows(newRows);
