@@ -7,7 +7,6 @@ const ContextMenu = ({state}) => {
     const handleContextMenu = useCallback(
         (event) => {
             event.preventDefault();
-            console.log(`Handling event: ${event.pageX}`)
             setAnchorPoint({x: event.pageX, y: event.pageY});
             setShow(true);
         },
@@ -17,7 +16,6 @@ const ContextMenu = ({state}) => {
     const handleClick = useCallback(() => (show ? setShow(false): null), [show]);
 
     useEffect(() => {
-        console.log("Adding event")
         document.addEventListener("click", handleClick);
         document.addEventListener("contextmenu", handleContextMenu);
         return () => {
@@ -27,9 +25,9 @@ const ContextMenu = ({state}) => {
     });
 
     return (
-        <div className="contextMenu">
+        <div className="contextMenuContainer">
             {show ? (
-                <ul className="menu" style={{
+                <ul className="contextMenu" style={{
                     top: anchorPoint.y,
                     left: anchorPoint.x
                 }}>
