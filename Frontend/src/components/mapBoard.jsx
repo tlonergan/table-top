@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
 import { boardHubConnection, startHubConnection } from '../state/hubConnections';
@@ -21,6 +21,9 @@ const MapBoard = () => {
     const [squaresWide] = useState(25);
     const [squaresHigh] = useState(25);
     const [rows, setRows] = useState([]);
+
+    const {user} = useAuth0();
+    console.log("User: ", user);
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
@@ -46,7 +49,7 @@ const MapBoard = () => {
                 columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
             }
     
-            newRows.push((<><div className="boardColumn" key={"row" + i}>{columns}</div><br/></>));
+            newRows.push((<div className="boardColumn" key={"row" + i}>{columns}</div>));
         }
 
         setRows(newRows);
