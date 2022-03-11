@@ -1,8 +1,12 @@
 using Microsoft.Extensions.FileProviders;
 using TableTop;
+using TableTop.Entities.Configuration;
+using TableTop.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddSingleton<Settings>();
+StorageRegistrar.Register(builder.Services);
 
 builder.Services.AddControllers();
 builder.Services.AddSignalR();
@@ -22,6 +26,8 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Configuration.AddEnvironmentVariables();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +36,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Settings? settings = app.Services.GetService<Settings>();
+app.Configuration.Bind(settings);
 
 app.UseHttpsRedirection();
 
