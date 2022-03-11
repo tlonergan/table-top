@@ -254,15 +254,21 @@ a {
 .token {
   border-radius: 100%;
   background-color: darkgray;
-  height: 78px;
-  width: 78px;
+  height: 76px;
+  width: 76px;
 }
 
 .token > img{
-  height: 78px;
-  width: 78px;
+  height: 75px;
+  width: 75px;
+}
+
+.mapToken {
+
+  border: 1px solid transparent;
 }
 
 .mapToken.selected {
-  border: 2px solid blue;
+  border: 1px solid blue;
+  background-color: lightgray;
 }
