@@ -8,5 +8,7 @@ public class MapToken
     }
 
     public Guid Id { get; set; }
+    public Guid TokenId { get; set; }
+    public Guid BoardId { get; set; }
     public Position Position { get; set; }
 }
