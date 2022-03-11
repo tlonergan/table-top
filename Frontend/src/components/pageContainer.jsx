@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHamburger } from '@fortawesome/free-solid-svg-icons';
 // import CanvasContainer from './canvasContainer'
 import MapBoard from './mapBoard';
+import ContextMenu from './contextMenu';
 
 const PageContainer = () => {
     return (
@@ -18,6 +19,7 @@ const PageContainer = () => {
             </div>
             {/* <CanvasContainer></CanvasContainer> */}
             <MapBoard/>
+            <ContextMenu />
         </Provider>
     );
 };
