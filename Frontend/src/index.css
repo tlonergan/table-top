@@ -169,6 +169,29 @@ h2 > a {
   align-items: flex-start;
 }
 
+.pageContainer {
+  margin: 32px 128px;
+}
+
+.form {
+  padding-left: 32px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 8px;
+}
+
+.formField > input {
+  width: 240px;
+}
+
+.formField > button {
+  margin: 0;
+  padding: 0;
+}
+
 .toolbox {
   padding-left: 64px;
 }

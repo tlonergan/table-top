@@ -1,13 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TableTop.Entities;
 
 namespace TableTop.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BoardController : ControllerBase
+    public class GameController : ControllerBase
     {
-        [HttpGet]
-        public void Get()
+        [HttpPost]
+        public async Task Post(Game game)
         {
         }
     }

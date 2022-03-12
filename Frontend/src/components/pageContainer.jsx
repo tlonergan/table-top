@@ -8,7 +8,7 @@ import { faHamburger } from '@fortawesome/free-solid-svg-icons';
 import MapHome from './mapHome';
 import NotFound from './notFound';
 import MapBoard from './mapBoard';
-import CreateGame from './CreateGame';
+import CreateGame from './createGame';
 
 const PageContainer = () => {
     return (
@@ -22,13 +22,15 @@ const PageContainer = () => {
                         </button>
                     </div>
                 </div>
-                {/* <CanvasContainer></CanvasContainer> */}
-                <Routes>
-                    <Route path="/" element={<MapHome/>} />
-                    <Route path="game/create" element={<CreateGame />} />
-                    <Route path="board/:boardId" element={<MapBoard/>} />
-                    <Route path="*" element={<NotFound/>} />
-                </Routes>
+                <div className='pageContainer'>
+                    {/* <CanvasContainer></CanvasContainer> */}
+                    <Routes>
+                        <Route path="/" element={<MapHome/>} />
+                        <Route path="game/create" element={<CreateGame />} />
+                        <Route path="board/:boardId" element={<MapBoard/>} />
+                        <Route path="*" element={<NotFound/>} />
+                    </Routes>
+                </div>
             </BrowserRouter>
         </Provider>
     );
