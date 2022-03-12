@@ -26,6 +26,13 @@ a.button {
   border: 0;
   border-radius: 8px;
   height: 40px;
+  background-color: rebeccapurple;
+  color: white;
+}
+
+button:hover {
+  background-color: mediumpurple;
+  color: white;
 }
 
 button:disabled {
@@ -34,6 +41,16 @@ button:disabled {
 a {
   cursor: pointer;
   text-decoration: underline;
+  color: lightgrey;
+}
+
+a:hover {
+  color: grey;
+}
+
+h2 > a {
+  font-size: 18px;
+  padding-left: 16px;
 }
 
 #root {
@@ -102,84 +119,6 @@ a {
 .menuItem a:hover {
 }
 
-.tabContainer {
-  display: flex;
-}
-
-.tabContainer .tab {    
-  padding: 10px 20px;
-  border-radius: 5px 5px 0 0;
-  border-width: 1px;
-  width: auto;
-  margin-right: 8px;
-}
-
-.tabContainer a.tab {
-  text-decoration: none;
-}
-
-.tabContainer .selectedTab{
-}
-
-.tabPage {
-  padding: 10px;
-  border: solid;
-  border-width: 1px;
-}
-
-.table {
-  display: flex;
-  flex-direction: column;
-}
-
-.table > .rowWithSlide{
-  display: flex;
-  flex-direction: column;
-}
-
-.table > .row:nth-child(even),
-.table > .rowWithSlide:nth-child(even) {
-}
-
-.row,
-.horizontal,
-.dateRangeNavigator {
-  display: flex;
-  flex-direction: row;
-}
-
-.table .row,
-.table .rowWithSlide {
-  padding: 24px 0;
-  justify-content: space-between;
-}
-
-.row > div:first-child,
-.rowWithSlide > div {
-  margin-left: 48px;
-  height: 100%;
-}
-
-.rowWithSlide .row > div:first-child {
-  margin: 0;
-}
-
-.row > div .button {
-  padding: 16px 16px;
-  font-weight: 700;
-  text-decoration: none;
-  height: 100%;
-  text-align: center;
-  margin: 0 8px 0 0;
-}
-
-.row .button:last-child {
-}
-
-.rowWithSlide .row {
-  padding: 0;
-}
-
 .card {
   margin-bottom: 10px;
   padding: 0;
@@ -221,6 +160,13 @@ a {
 
 .center {
   text-align: center;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
 }
 
 .toolbox {
