@@ -1,5 +1,5 @@
 ﻿namespace TableTop.Service;
 
-internal interface IBoardService
+internal interface IGameService
 {
 }

@@ -15,13 +15,33 @@ internal class GameDataRepository : IGameDataRepository
         DatabaseResponse? databaseResponse = cosmosClient.CreateDatabaseIfNotExistsAsync(DataKeys.DatabaseName)
                                                          .Result;
         Database database = databaseResponse.Database;
-        ContainerResponse? containerResponse = database.CreateContainerIfNotExistsAsync(ContainerName, $"/{nameof(Game.Name)}")
+        ContainerResponse? containerResponse = database.CreateContainerIfNotExistsAsync(ContainerName, $"/{nameof(Game.Id)}")
                                                        .Result;
 
         _container = containerResponse.Container;
     }
 
-    public async Task<List<Game>> Get(User user)
+    public async Task<Game?> Get(Guid id)
+    {
+        using var feedIterator = _container.GetItemLinqQueryable<Game>()
+                                           .Where(g => g.Id == id)
+                                           .ToFeedIterator();
+        
+
+        foreach (Game? game in await feedIterator.ReadNextAsync())
+        {
+            return game;
+        }
+
+        return null;
+    }
+
+    public async Task Create(Game game)
+    {
+        ItemResponse<Game> itemResponse = await _container.CreateItemAsync(game);
+    }
+
+    public async Task<List<Game>> GetAll(User user)
     {
         List<Game> results = new();
 

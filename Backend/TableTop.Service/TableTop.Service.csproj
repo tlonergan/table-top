@@ -11,7 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Implementation\" />
+    <ProjectReference Include="..\TableTop.Entities\TableTop.Entities.csproj" />
+    <ProjectReference Include="..\TableTop.Storage\TableTop.Storage.csproj" />
   </ItemGroup>
 
 </Project>

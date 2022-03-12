@@ -1,6 +1,6 @@
 ﻿namespace TableTop.Entities;
 
-public class MapToken
+public class MapToken : Token
 {
     public MapToken()
     {
@@ -8,7 +8,9 @@ public class MapToken
     }
 
     public Guid Id { get; set; }
-    public Guid TokenId { get; set; }
+    public Guid MapTokenId { get; set; }
     public Guid BoardId { get; set; }
     public Position Position { get; set; }
+
+    public Game Game { get; set; }
 }

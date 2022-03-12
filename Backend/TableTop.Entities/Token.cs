@@ -3,5 +3,5 @@
 public class Token
 {
     public string Name { get; set; }
-    //Image Identifier
+    public string ImageUrl { get; set; }
 }
