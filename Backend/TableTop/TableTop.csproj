@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\TableTop.Entities\TableTop.Entities.csproj" />
+    <ProjectReference Include="..\TableTop.Service\TableTop.Service.csproj" />
+    <ProjectReference Include="..\TableTop.Storage\TableTop.Storage.csproj" />
   </ItemGroup>
 
 </Project>

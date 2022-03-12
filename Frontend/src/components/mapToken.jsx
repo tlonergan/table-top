@@ -65,7 +65,10 @@ const MapToken = ({state, parentState}) => {
         }
     };
 
-    const onTokenMovedEvent = (position, mapTokenId) => {
+    const onTokenMovedEvent = (mapToken) => {
+        const position = mapToken.position;
+        const mapTokenId = mapToken.id;
+
         if(mapToken.id === mapTokenId)
             setMapToken(prev => ({...prev, position: position}));
     }

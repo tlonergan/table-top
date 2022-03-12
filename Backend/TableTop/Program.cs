@@ -1,16 +1,24 @@
 using Microsoft.Extensions.FileProviders;
 using TableTop;
+using TableTop.Entities.Configuration;
+using TableTop.Service;
+using TableTop.Storage;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+IServiceCollection services = builder.Services;
 
-builder.Services.AddControllers();
-builder.Services.AddSignalR();
+services.AddSingleton<Settings>();
+ServiceRegistrar.Register(services);
+StorageRegistrar.Register(services);
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+services.AddControllers();
+services.AddSignalR();
 
-builder.Services.AddCors(options =>
+services.AddEndpointsApiExplorer();
+services.AddSwaggerGen();
+
+services.AddCors(options =>
 {
     options.AddPolicy("ClientPermissions",
                       policy =>
@@ -22,6 +30,8 @@ builder.Services.AddCors(options =>
                       });
 });
 
+builder.Configuration.AddEnvironmentVariables();
+
 WebApplication app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +40,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+Settings? settings = app.Services.GetService<Settings>();
+app.Configuration.Bind(settings);
 
 app.UseHttpsRedirection();
 
