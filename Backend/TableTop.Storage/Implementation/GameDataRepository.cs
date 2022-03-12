@@ -36,9 +36,10 @@ internal class GameDataRepository : IGameDataRepository
         return null;
     }
 
-    public async Task Create(Game game)
+    public async Task<Game> Create(Game game)
     {
         ItemResponse<Game> itemResponse = await _container.CreateItemAsync(game);
+        return itemResponse.Resource;
     }
 
     public async Task<List<Game>> GetAll(User user)

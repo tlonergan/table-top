@@ -15,7 +15,7 @@ internal class GameService : IGameService
     public async Task SaveMapToken(MapToken mapToken)
     {
         Game mapTokenGame = mapToken.Game;
-        Game? game = await _gameDataRepository.Get(mapTokenGame.Id);
+        Game? game = await Get(mapTokenGame.Id);
         if (game == null)
         {
             await CreateGame(mapToken);
@@ -28,7 +28,7 @@ internal class GameService : IGameService
     private async Task CreateGame(MapToken mapToken)
     {
         Game mapTokenGame = mapToken.Game;
-        await _gameDataRepository.Create(new Game
+        await Create(new Game
         {
             Id = mapTokenGame.Id,
             Name = mapTokenGame.Id == default ? "Default Game" : "Unnamed",
@@ -44,5 +44,17 @@ internal class GameService : IGameService
                 }
             }
         });
+    }
+
+    public async Task<Game?> Get(Guid id)
+    {
+        Game? game = await _gameDataRepository.Get(id);
+        return game;
+    }
+
+    public async Task<Game> Create(Game game)
+    {
+        var createdGame = await _gameDataRepository.Create(game);
+        return createdGame;
     }
 }

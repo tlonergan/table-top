@@ -7,6 +7,6 @@ namespace TableTop.Storage
     {
         Task<Game?> Get(Guid id);
         Task<List<Game>> GetAll(User user);
-        Task Create(Game game);
+        Task<Game> Create(Game game);
     }
 }
