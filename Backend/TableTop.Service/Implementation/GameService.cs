@@ -1,4 +1,6 @@
-﻿using TableTop.Entities;
+﻿using System.Security.Principal;
+using TableTop.Entities;
+using TableTop.Entities.People;
 using TableTop.Storage;
 
 namespace TableTop.Service.Implementation;
@@ -10,6 +12,24 @@ internal class GameService : IGameService
     public GameService(IGameDataRepository gameDataRepository)
     {
         _gameDataRepository = gameDataRepository;
+    }
+
+    public async Task<Game?> Get(Guid id)
+    {
+        Game? game = await _gameDataRepository.Get(id);
+        return game;
+    }
+
+    public async Task<Game> Create(Game game)
+    {
+        Game createdGame = await _gameDataRepository.Create(game);
+        return createdGame;
+    }
+
+    public async Task<List<Game>> GetAll(IIdentity userIdentity)
+    {
+        List<Game> games = await _gameDataRepository.GetAll(new User{Username = "Somehow get the username"});
+        return games;
     }
 
     public async Task SaveMapToken(MapToken mapToken)
@@ -44,17 +64,5 @@ internal class GameService : IGameService
                 }
             }
         });
-    }
-
-    public async Task<Game?> Get(Guid id)
-    {
-        Game? game = await _gameDataRepository.Get(id);
-        return game;
-    }
-
-    public async Task<Game> Create(Game game)
-    {
-        var createdGame = await _gameDataRepository.Create(game);
-        return createdGame;
     }
 }

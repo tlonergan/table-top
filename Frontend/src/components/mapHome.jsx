@@ -1,10 +1,54 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
+import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
+
+import configuration from "../env.json";
+import Loading from './loading';
 
 const MapHome = () => {
+    const hostName = configuration.HOST_NAME;
+
+    const [games, setGames] = useState([]);
+    const { getAccessTokenSilently } = useAuth0();
+
     useEffect(()=> {
-        //TODO: Load existing games
-    }, [])
+        getGames();
+    }, []);
+
+    const getGames = async () => {
+        const token = await getAccessTokenSilently({
+            audience: "https://table-top-map.azurewebsites.net/",
+            scope: 'read:games',
+        })
+            .catch(console.error);
+
+        const response = await fetch(
+            hostName + 'api/game',
+            {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                }
+            }
+        )
+        .catch(console.error);
+        
+        if(response.ok)
+            setGames(await response.json());
+    };
+
+    const getGamesSection = () => {
+        if(!games || games.length === 0)
+            return (<p>This is where your games would be if you had any!</p>);
+
+        return (
+            <>
+                {games.map(g => (<p key={g.id}>g.name</p>))}
+            </>
+        );
+    };
 
     return (
         <>
@@ -17,11 +61,14 @@ const MapHome = () => {
                     </h2>
                 </div>
                 <div>
-                    <p>This is where your games would be if you had any!</p>
+                    {getGamesSection()}
                 </div>
             </div>
         </>
     );
 };
 
-export default MapHome;
+export default withAuthenticationRequired(
+    MapHome,
+    { onRedirecting: () => <Loading/>}
+);

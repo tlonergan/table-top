@@ -1,6 +1,8 @@
 import React from 'react';
 import { Provider } from 'jotai';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuth0 } from '@auth0/auth0-react';
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHamburger } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,13 +13,15 @@ import MapBoard from './mapBoard';
 import CreateGame from './createGame';
 
 const PageContainer = () => {
+    const { logout } = useAuth0();
+
     return (
         <Provider>
             <BrowserRouter>
                 <div className="navigationBar">
                     <span>Table Top</span>
                     <div>
-                        <button className="menuButton">
+                        <button className="menuButton" onClick={() => logout()}>
                             <FontAwesomeIcon icon={faHamburger}/>
                         </button>
                     </div>

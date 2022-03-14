@@ -1,5 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using TableTop;
+using TableTop.Authorization;
+using TableTop.Entities;
 using TableTop.Entities.Configuration;
 using TableTop.Service;
 using TableTop.Storage;
@@ -9,6 +13,8 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 IServiceCollection services = builder.Services;
 
 services.AddSingleton<Settings>();
+services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
 ServiceRegistrar.Register(services);
 StorageRegistrar.Register(services);
 
@@ -30,6 +36,22 @@ services.AddCors(options =>
                       });
 });
 
+string authenticationDomain = builder.Configuration["AUTHENTICATION_AUTHORITY"];
+services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+         {
+             options.Authority = authenticationDomain;
+             options.Audience = builder.Configuration["AUTHENTICATION_AUDIENCE"];
+         });
+
+services.AddAuthorization(options =>
+{
+    foreach (string supportedScope in AuthorizationScopes.AllScopes)
+    {
+        options.AddPolicy(supportedScope, policy => policy.Requirements.Add(new HasScopeRequirement(authenticationDomain, supportedScope)));
+    }
+});
+
 builder.Configuration.AddEnvironmentVariables();
 
 WebApplication app = builder.Build();
@@ -48,17 +70,11 @@ app.UseHttpsRedirection();
 
 app.UseCors("ClientPermissions");
 
+app.UseAuthentication();
 app.UseAuthorization();
 
-PhysicalFileProvider physicalFileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "App"));
-var contents = physicalFileProvider.GetDirectoryContents(string.Empty);
-Console.WriteLine("Files in './App'");
-foreach (IFileInfo content in contents)
-{
-    Console.WriteLine(content.Name);
-}
-
-StaticFileOptions staticFileOptions = new StaticFileOptions { FileProvider = physicalFileProvider, RequestPath = "" };
+PhysicalFileProvider physicalFileProvider = new(Path.Combine(Directory.GetCurrentDirectory(), "App"));
+StaticFileOptions staticFileOptions = new() { FileProvider = physicalFileProvider, RequestPath = "" };
 app.UseStaticFiles(staticFileOptions);
 
 app.MapControllers();

@@ -23,10 +23,10 @@ internal class GameDataRepository : IGameDataRepository
 
     public async Task<Game?> Get(Guid id)
     {
-        using var feedIterator = _container.GetItemLinqQueryable<Game>()
-                                           .Where(g => g.Id == id)
-                                           .ToFeedIterator();
-        
+        using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
+                                                           .Where(g => g.Id == id)
+                                                           .ToFeedIterator();
+
 
         foreach (Game? game in await feedIterator.ReadNextAsync())
         {

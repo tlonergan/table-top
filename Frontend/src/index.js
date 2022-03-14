@@ -11,7 +11,9 @@ ReactDOM.render(
   <React.StrictMode>
     <Auth0Provider domain="dev-27agpw4g.us.auth0.com"
                     clientId="miSZA24uEXe5YcEvWUWKTzSu8Lm8Ow97"
-                    redirectUri={window.location.origin + "/index.html"}>
+                    redirectUri={window.location.origin + "/index.html"}
+                    scope="read:games"
+                    audience="https://table-top-map.azurewebsites.net/">
       <App />
     </Auth0Provider>
   </React.StrictMode>,
