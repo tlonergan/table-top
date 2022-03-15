@@ -4,7 +4,7 @@ namespace TableTop.Entities
 {
     public class Game : AuditableEntity
     {
-        public string id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public User Owner { get; set; }
 

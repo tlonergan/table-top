@@ -3,18 +3,23 @@ using Microsoft.Extensions.DependencyInjection;
 using TableTop.Entities.Configuration;
 using TableTop.Storage.Implementation;
 
-namespace TableTop.Storage
+namespace TableTop.Storage;
+
+public static class StorageRegistrar
 {
-    public static class StorageRegistrar
+    public static void Register(IServiceCollection services)
     {
-        public static void Register(IServiceCollection services)
+        services.AddSingleton<IGameDataRepository, GameDataRepository>();
+        services.AddSingleton(serviceProvider =>
         {
-            services.AddSingleton<IGameDataRepository, GameDataRepository>();
-            services.AddSingleton(serviceProvider =>
-            {
-                Settings settings = serviceProvider.GetRequiredService<Settings>();
-                return new CosmosClient(settings.DOCUMENT_STORE_URL, settings.PRIMARY_KEY, new CosmosClientOptions { ApplicationName = "TableTop.MapsService" });
-            });
-        }
+            Settings settings = serviceProvider.GetRequiredService<Settings>();
+            return new CosmosClient(settings.DOCUMENT_STORE_URL,
+                                    settings.PRIMARY_KEY,
+                                    new CosmosClientOptions
+                                    {
+                                        ApplicationName = "TableTop.MapsService",
+                                        SerializerOptions = new CosmosSerializationOptions { PropertyNamingPolicy = CosmosPropertyNamingPolicy.CamelCase }
+                                    });
+        });
     }
 }

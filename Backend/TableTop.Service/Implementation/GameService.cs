@@ -36,7 +36,7 @@ internal class GameService : IGameService
     public async Task SaveMapToken(MapToken mapToken)
     {
         Game mapTokenGame = mapToken.Game;
-        Game? game = await Get(mapTokenGame.id);
+        Game? game = await Get(mapTokenGame.Id);
         if (game == null)
         {
             await CreateGame(mapToken);
@@ -51,8 +51,8 @@ internal class GameService : IGameService
         Game mapTokenGame = mapToken.Game;
         await Create(new Game
         {
-            id = mapTokenGame.id,
-            Name = mapTokenGame.id == default ? "Default Game" : "Unnamed",
+            Id = mapTokenGame.Id,
+            Name = mapTokenGame.Id == default ? "Default Game" : "Unnamed",
             Boards = new List<Board>
             {
                 new Board

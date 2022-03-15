@@ -33,7 +33,7 @@ namespace TableTop.Controllers
             return Ok(createdGame);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<Game>> Get(string id)
         {
