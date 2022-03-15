@@ -19,6 +19,7 @@ stages:
   - stage: Build
     jobs:
       - job: Build   
+        condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
         steps:
         - script: |
             npm install &&
@@ -32,11 +33,21 @@ stages:
           displayName: 'dotnet build $(buildConfiguration)'
           workingDirectory: Backend
   - stage: Deploy
-    dependsOn: Build
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
     jobs:
-      - job: Deploy   
+      - job: Production_Build_And_Deploy   
         steps:
+        - script: |
+            npm install &&
+            mv -f ./src/env.production.json ./src/env.json
+            npm run build && 
+            cp -R ./build ../Backend/TableTop/App
+          workingDirectory: Frontend
+          name: 'Build_Frontend'
+          displayName: 'Build Frontend'
+        - script: dotnet build --configuration $(buildConfiguration)
+          displayName: 'dotnet build $(buildConfiguration)'
+          workingDirectory: Backend
         - task: DotNetCoreCLI@2
           inputs:
             command: 'publish'
