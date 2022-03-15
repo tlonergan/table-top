@@ -34,7 +34,7 @@ const PageContainer = () => {
                         <Route path="game/:gameId" element={<GameHome />} />
                         <Route path="game/create" element={<CreateGame />} />
                         <Route path="board/:boardId" element={<MapBoard />} />
-                        <Route path="*" element={<NotFound />} />
+                        <Route path="*" element={<MapHome />} />
                     </Routes>
                 </div>
             </BrowserRouter>
