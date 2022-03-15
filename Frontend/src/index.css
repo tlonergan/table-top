@@ -38,14 +38,14 @@ button:hover {
 button:disabled {
 }
 
-a {
-  cursor: pointer;
-  text-decoration: underline;
-  color: lightgrey;
-}
-
 a:hover {
   color: grey;
+}
+
+h2 a {
+ cursor: pointer;
+ text-decoration: underline;
+ color: lightgrey;
 }
 
 h2 > a {

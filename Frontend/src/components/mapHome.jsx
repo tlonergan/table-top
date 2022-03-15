@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
@@ -20,7 +20,12 @@ const MapHome = () => {
 
         return (
             <>
-                {games.map(g => (<p key={g.id}>g.name</p>))}
+                {games.map(g => (
+                    <React.Fragment key={g.id}>
+                        <p key={g.id}>{g.name}</p>
+                        <Link to={`game/${g.id}`}>Go to game</Link>
+                    </React.Fragment>
+                ))}
             </>
         );
     };
