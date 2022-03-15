@@ -22,6 +22,10 @@ const MapSquare = ({state, movementConnection}) => {
     
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+
+        return () => {
+            movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+        };
     }, []);
 
 
@@ -46,19 +50,22 @@ const MapSquare = ({state, movementConnection}) => {
                 if(!token)
                     return;
                     
-                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, square.position, mapToken.id, token.id);
+                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {postion: square.position, id: mapToken.id, tokenId: token.id});
             });
         },
     }));
 
-    const onTokenMovedEvent = (position, mapTokenId, tokenId) => {
+    const onTokenMovedEvent = (mapToken) => {
+        const position = mapToken.position;
         const squarePosition = square.position;
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
 
+        const mapTokenId = mapToken.id;
         getMapTokens().then((mapTokens) => {
             const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
             if(!existingMapToken){
+                const tokenId = mapToken.tokenId;
                 const token = tokens.find(t => t.id === tokenId);
                 if(!token){
                     return;

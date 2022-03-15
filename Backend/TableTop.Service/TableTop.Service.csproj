@@ -10,4 +10,9 @@
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\TableTop.Entities\TableTop.Entities.csproj" />
+    <ProjectReference Include="..\TableTop.Storage\TableTop.Storage.csproj" />
+  </ItemGroup>
+
 </Project>
