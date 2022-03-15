@@ -13,23 +13,23 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: |
-    npm install &&
-    mv -f ./src/env.production.json ./src/env.json
-    npm run build && 
-    cp -R ./build ../Backend/TableTop/App
-  workingDirectory: Frontend
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
-  workingDirectory: Backend
-- task: DotNetCoreCLI@2
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-- task: AzureWebApp@1
-  inputs:
-    azureSubscription: 'Azure subscription 1(135449c3-e7ed-4552-b603-b20a35f29f53)'
-    appType: 'webAppLinux'
-    appName: 'table-top-map'
-    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
-    runtimeStack: 'DOTNETCORE|6.0'
+  - script: |
+      npm install &&
+      mv -f ./src/env.production.json ./src/env.json
+      npm run build && 
+      cp -R ./build ../Backend/TableTop/App
+    workingDirectory: Frontend
+  - script: dotnet build --configuration $(buildConfiguration)
+    displayName: 'dotnet build $(buildConfiguration)'
+    workingDirectory: Backend
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'publish'
+      publishWebProjects: true
+  - task: AzureWebApp@1
+    inputs:
+      azureSubscription: 'Azure subscription 1(135449c3-e7ed-4552-b603-b20a35f29f53)'
+      appType: 'webAppLinux'
+      appName: 'table-top-map'
+      package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+      runtimeStack: 'DOTNETCORE|6.0'
