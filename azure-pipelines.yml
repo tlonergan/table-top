@@ -34,6 +34,7 @@ stages:
           workingDirectory: Backend
   - stage: Deploy
     condition: and(succeeded(), ne(variables['Build.Reason'], 'PullRequest'))
+    dependsOn: []
     jobs:
       - job: Production_Build_And_Deploy   
         steps:
