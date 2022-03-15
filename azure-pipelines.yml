@@ -17,9 +17,9 @@ variables:
 
 stages:
   - stage: Build
+    condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
     jobs:
       - job: Build   
-        condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
         steps:
         - script: |
             npm install &&
