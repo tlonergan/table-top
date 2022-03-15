@@ -1,5 +1,6 @@
 ﻿using System.Security.Principal;
 using TableTop.Entities;
+using TableTop.Entities.Authorization;
 using TableTop.Entities.People;
 using TableTop.Storage;
 
@@ -14,7 +15,7 @@ internal class GameService : IGameService
         _gameDataRepository = gameDataRepository;
     }
 
-    public async Task<Game?> Get(Guid id)
+    public async Task<Game?> Get(string id)
     {
         Game? game = await _gameDataRepository.Get(id);
         return game;
@@ -26,16 +27,16 @@ internal class GameService : IGameService
         return createdGame;
     }
 
-    public async Task<List<Game>> GetAll(IIdentity userIdentity)
+    public async Task<List<Game>> GetAll(UserIdentity userIdentity)
     {
-        List<Game> games = await _gameDataRepository.GetAll(new User{Username = "Somehow get the username"});
+        List<Game> games = await _gameDataRepository.GetAll(userIdentity.User);
         return games;
     }
 
     public async Task SaveMapToken(MapToken mapToken)
     {
         Game mapTokenGame = mapToken.Game;
-        Game? game = await Get(mapTokenGame.Id);
+        Game? game = await Get(mapTokenGame.id);
         if (game == null)
         {
             await CreateGame(mapToken);
@@ -50,8 +51,8 @@ internal class GameService : IGameService
         Game mapTokenGame = mapToken.Game;
         await Create(new Game
         {
-            Id = mapTokenGame.Id,
-            Name = mapTokenGame.Id == default ? "Default Game" : "Unnamed",
+            id = mapTokenGame.id,
+            Name = mapTokenGame.id == default ? "Default Game" : "Unnamed",
             Boards = new List<Board>
             {
                 new Board

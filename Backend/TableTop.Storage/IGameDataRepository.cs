@@ -5,7 +5,7 @@ namespace TableTop.Storage
 {
     public interface IGameDataRepository
     {
-        Task<Game?> Get(Guid id);
+        Task<Game?> Get(string id);
         Task<List<Game>> GetAll(User user);
         Task<Game> Create(Game game);
     }

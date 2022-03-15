@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TableTop.Entities;
+using TableTop.Entities.Authorization;
 using TableTop.Service;
 
 namespace TableTop.Controllers
@@ -22,13 +23,19 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.WriteGames)]
         public async Task<ActionResult<Game>> Post(Game game)
         {
+            IIdentity? userIdentity = User.Identity;
+            if (userIdentity == null)
+                return Forbid();
+
+            game.Owner = new UserIdentity(userIdentity).User;
+
             Game createdGame = await _gameService.Create(game);
             return Ok(createdGame);
         }
 
         [HttpGet("{id}")]
         [Authorize(AuthorizationScopes.ReadGames)]
-        public async Task<ActionResult<Game>> Get(Guid id)
+        public async Task<ActionResult<Game>> Get(string id)
         {
             Game? game = await _gameService.Get(id);
             if (game == null)
@@ -45,7 +52,8 @@ namespace TableTop.Controllers
             if (userIdentity == null)
                 return Forbid();
 
-            List<Game> games = await _gameService.GetAll(userIdentity);
+            var user = new UserIdentity(userIdentity);
+            List<Game> games = await _gameService.GetAll(user);
             return Ok(games);
         }
     }

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
 using TableTop;
 using TableTop.Authorization;
-using TableTop.Entities;
+using TableTop.Entities.Authorization;
 using TableTop.Entities.Configuration;
 using TableTop.Service;
 using TableTop.Storage;
@@ -18,7 +18,12 @@ services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
 ServiceRegistrar.Register(services);
 StorageRegistrar.Register(services);
 
-services.AddControllers();
+services.AddControllers()
+        .ConfigureApiBehaviorOptions(options =>
+         {
+             options.SuppressModelStateInvalidFilter = true;
+         });
+
 services.AddSignalR();
 
 services.AddEndpointsApiExplorer();

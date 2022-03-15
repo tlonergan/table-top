@@ -15,16 +15,32 @@ internal class GameDataRepository : IGameDataRepository
         DatabaseResponse? databaseResponse = cosmosClient.CreateDatabaseIfNotExistsAsync(DataKeys.DatabaseName)
                                                          .Result;
         Database database = databaseResponse.Database;
-        ContainerResponse? containerResponse = database.CreateContainerIfNotExistsAsync(ContainerName, $"/{nameof(Game.Id)}")
+        ContainerResponse? containerResponse = database.CreateContainerIfNotExistsAsync(ContainerName, $"/{nameof(Game.id)}")
                                                        .Result;
 
         _container = containerResponse.Container;
     }
 
-    public async Task<Game?> Get(Guid id)
+    public async Task<List<Game>> GetAll(User user)
+    {
+        List<Game> results = new();
+
+        using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
+                                                           .Where(g => g.Owner.Id == user.Id)
+                                                           .ToFeedIterator();
+
+        foreach (Game game in await feedIterator.ReadNextAsync())
+        {
+            results.Add(game);
+        }
+
+        return results;
+    }
+
+    public async Task<Game?> Get(string id)
     {
         using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
-                                                           .Where(g => g.Id == id)
+                                                           .Where(g => g.id == id)
                                                            .ToFeedIterator();
 
 
@@ -38,23 +54,10 @@ internal class GameDataRepository : IGameDataRepository
 
     public async Task<Game> Create(Game game)
     {
+        game.id = Guid.NewGuid()
+                      .ToString();
+
         ItemResponse<Game> itemResponse = await _container.CreateItemAsync(game);
         return itemResponse.Resource;
-    }
-
-    public async Task<List<Game>> GetAll(User user)
-    {
-        List<Game> results = new();
-
-        using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
-                                                           .Where(g => g.Owner.Username == user.Username)
-                                                           .ToFeedIterator();
-
-        foreach (Game game in await feedIterator.ReadNextAsync())
-        {
-            results.Add(game);
-        }
-
-        return results;
     }
 }

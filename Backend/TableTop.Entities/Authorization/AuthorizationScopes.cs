@@ -1,4 +1,4 @@
-﻿namespace TableTop.Entities
+﻿namespace TableTop.Entities.Authorization
 {
     public static class AuthorizationScopes
     {

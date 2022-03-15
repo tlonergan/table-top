@@ -2,42 +2,17 @@ import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
-import configuration from "../env.json";
+import { getGames } from '../services/gameService';
 import Loading from './loading';
 
 const MapHome = () => {
-    const hostName = configuration.HOST_NAME;
 
     const [games, setGames] = useState([]);
     const { getAccessTokenSilently } = useAuth0();
 
     useEffect(()=> {
-        getGames();
+        getGames(getAccessTokenSilently).then(setGames);
     }, []);
-
-    const getGames = async () => {
-        const token = await getAccessTokenSilently({
-            audience: "https://table-top-map.azurewebsites.net/",
-            scope: 'read:games',
-        })
-            .catch(console.error);
-
-        const response = await fetch(
-            hostName + 'api/game',
-            {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                }
-            }
-        )
-        .catch(console.error);
-        
-        if(response.ok)
-            setGames(await response.json());
-    };
 
     const getGamesSection = () => {
         if(!games || games.length === 0)
