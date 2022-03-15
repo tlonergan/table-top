@@ -79,8 +79,15 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 PhysicalFileProvider physicalFileProvider = new(Path.Combine(Directory.GetCurrentDirectory(), "App"));
-StaticFileOptions staticFileOptions = new() { FileProvider = physicalFileProvider, RequestPath = "" };
-app.UseStaticFiles(staticFileOptions);
+app.UseFileServer(new FileServerOptions
+{
+    FileProvider = physicalFileProvider,
+    RequestPath = string.Empty,
+    EnableDefaultFiles = true,
+    EnableDirectoryBrowsing = false
+});
+
+app.MapFallbackToFile("index.html", new StaticFileOptions { FileProvider = physicalFileProvider, RequestPath = string.Empty });
 
 app.MapControllers();
 app.MapHub<BoardHub>("/board-hub");
