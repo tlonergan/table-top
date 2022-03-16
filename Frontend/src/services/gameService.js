@@ -17,6 +17,14 @@ const getToken = async (getAccessTokenSilently, scopes) => {
     return token;
 };
 
+const getRequestHeaders = (token) => {
+    return {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    };
+};
+
 export const getGames = async (getAccessTokenSilently) => {
     const token = await getToken(getAccessTokenSilently, 'read:games');
 
@@ -35,6 +43,30 @@ export const getGames = async (getAccessTokenSilently) => {
     
     if(response.ok)
         return await response.json();
+};
+
+export const getGame = async (getAccessTokenSilently, id) =>  {
+    if(!id){
+        console.error("Id must be set to retrieve game.");
+        return;
+    }
+
+    const token = await getToken(getAccessTokenSilently, 'read:games');
+    const getGameResponse = await fetch(
+        `${hostName}/game/${id}`,
+        {
+            method: 'GET',
+            headers: getRequestHeaders(token),
+        }
+    )
+    .catch(console.error);
+
+    if(!getGameResponse.ok){
+        console.error("Error retrieving game.", getGameResponse);
+        return;
+    }
+
+    return await getGameResponse.json();
 };
 
 export const createGame = async (game, getAccessTokenSilently) => {
