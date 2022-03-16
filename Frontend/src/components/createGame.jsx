@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+
+import Loading from './loading';
 
 import { createGame } from '../services/gameService';
 
@@ -37,4 +39,7 @@ const CreateGame = () =>  {
     );
 };
 
-export default CreateGame;
+export default withAuthenticationRequired(
+    CreateGame,
+    { onRedirecting: () => <Loading/>}
+);

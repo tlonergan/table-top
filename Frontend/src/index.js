@@ -12,7 +12,7 @@ ReactDOM.render(
     <Auth0Provider domain="dev-27agpw4g.us.auth0.com"
                     clientId="miSZA24uEXe5YcEvWUWKTzSu8Lm8Ow97"
                     redirectUri={window.location.origin + "/index.html"}
-                    scope="read:games write:games"
+                    scope="read:games write:games write:board"
                     audience="https://table-top-map.azurewebsites.net/">
       <App />
     </Auth0Provider>

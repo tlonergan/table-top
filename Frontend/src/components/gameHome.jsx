@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useAuth0 } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useAtom } from "jotai";
 import { useParams } from 'react-router-dom'
 
 import Loading from "./loading";
+import BoardHome from "./boardHome";
 
 import { getGame } from "../services/gameService";
 import { getActiveGameAtom } from "../state/game";
@@ -22,15 +23,25 @@ const GameHome = () => {
         });
     }, []);
 
-    console.log("GameHome => render", gameId, isLoaded, activeGame);
     if(!isLoaded)
         return (<Loading />);
+
+    const getBoardSection = () => {
+        if(!activeGame.boards)
+            return (<p>Game does not have any boards, yet. <a>Create One</a></p>);
+    };
 
     return (
         <>
             <p>Welcome to the home of your game, {activeGame.name}.</p>
+            <div>
+                <BoardHome boards={activeGame.boards} />
+            </div>
         </>
     );
 };
 
-export default GameHome;
+export default withAuthenticationRequired(
+    GameHome,
+    { onRedirecting: () => <Loading/>}
+);

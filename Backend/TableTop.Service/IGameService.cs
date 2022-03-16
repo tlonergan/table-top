@@ -1,12 +1,11 @@
-﻿using System.Security.Principal;
-using TableTop.Entities;
-using TableTop.Entities.Authorization;
+﻿using TableTop.Entities;
+using TableTop.Entities.People;
 
 namespace TableTop.Service;
 
 public interface IGameService
 {
-    Task<Game?> Get(string id);
+    Task<Game?> Get(string id, User userIdentity);
     Task<Game> Create(Game game);
-    Task<List<Game>> GetAll(UserIdentity userIdentity);
+    Task<List<Game>> GetAll(User userIdentity);
 }

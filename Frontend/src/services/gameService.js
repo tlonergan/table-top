@@ -1,29 +1,7 @@
 import configuration from "../env.json";
+import { getToken, getRequestHeaders } from "./tokenService";
 
 const hostName = `${configuration.HOST_NAME}api/`;
-
-const getToken = async (getAccessTokenSilently, scopes) => {
-    if(!getAccessTokenSilently){
-        console.error("getAccessTokenSilently was not set", getAccessTokenSilently);
-        return "";
-    }
-
-    const token = await getAccessTokenSilently({
-        audience: "https://table-top-map.azurewebsites.net/",
-        scope: scopes,
-    })
-    .catch(console.error);
-
-    return token;
-};
-
-const getRequestHeaders = (token) => {
-    return {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token}`,
-    };
-};
 
 export const getGames = async (getAccessTokenSilently) => {
     const token = await getToken(getAccessTokenSilently, 'read:games');
