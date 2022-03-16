@@ -4,6 +4,7 @@ import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { getGames } from '../services/gameService';
 import Loading from './loading';
+import Card from './card';
 
 const MapHome = () => {
 
@@ -22,8 +23,10 @@ const MapHome = () => {
             <>
                 {games.map(g => (
                     <React.Fragment key={g.id}>
-                        <p key={g.id}>{g.name}</p>
-                        <Link to={`game/${g.id}`}>Go to game</Link>
+                        <Card name={g.name}>
+                            <p key={g.id}>{g.name} {g.isGameMaster ? "(Game Master)" : ""}</p>
+                            <Link to={`game/${g.id}`}>Go to game</Link>
+                        </Card>
                     </React.Fragment>
                 ))}
             </>

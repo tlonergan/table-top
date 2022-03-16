@@ -24,13 +24,18 @@ internal class GameDataRepository : IGameDataRepository
     public async Task<List<Game>> GetAll(User user)
     {
         List<Game> results = new();
+        string userId = user.Id;
 
-        using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
-                                                           .Where(g => g.Owner.Id == user.Id)
-                                                           .ToFeedIterator();
+        using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
+                                                                        .Where(g => g.Owner.Id == userId || g.Players.Any(p => p.Id == userId))
+                                                                        .ToFeedIterator();
 
-        foreach (Game game in await feedIterator.ReadNextAsync())
+        foreach (DataEntities.Game dataGame in await feedIterator.ReadNextAsync())
         {
+            Game game = dataGame.Map();
+            if (dataGame?.Owner?.Id == userId)
+                game.IsGameMaster = true;
+
             results.Add(game);
         }
 
@@ -39,14 +44,13 @@ internal class GameDataRepository : IGameDataRepository
 
     public async Task<Game?> Get(string id)
     {
-        using FeedIterator<Game>? feedIterator = _container.GetItemLinqQueryable<Game>()
-                                                           .Where(g => g.Id == id)
-                                                           .ToFeedIterator();
+        using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
+                                                                        .Where(g => g.Id == id)
+                                                                        .ToFeedIterator();
 
-
-        foreach (Game? game in await feedIterator.ReadNextAsync())
+        foreach (DataEntities.Game? game in await feedIterator.ReadNextAsync())
         {
-            return game;
+            return game.Map();
         }
 
         return null;
@@ -57,7 +61,10 @@ internal class GameDataRepository : IGameDataRepository
         game.Id = Guid.NewGuid()
                       .ToString();
 
-        ItemResponse<Game> itemResponse = await _container.CreateItemAsync(game);
-        return itemResponse.Resource;
+        DataEntities.Game dataGame = DataEntities.Game.Map(game);
+        ItemResponse<DataEntities.Game> itemResponse = await _container.CreateItemAsync(dataGame);
+
+        DataEntities.Game? savedGame = itemResponse.Resource;
+        return savedGame.Map();
     }
 }

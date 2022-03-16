@@ -52,7 +52,7 @@ namespace TableTop.Controllers
             if (userIdentity == null)
                 return Forbid();
 
-            var user = new UserIdentity(userIdentity);
+            UserIdentity user = new UserIdentity(userIdentity);
             List<Game> games = await _gameService.GetAll(user);
             return Ok(games);
         }

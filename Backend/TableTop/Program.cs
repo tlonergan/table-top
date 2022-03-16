@@ -29,9 +29,10 @@ services.AddSignalR();
 services.AddEndpointsApiExplorer();
 services.AddSwaggerGen();
 
+string corsPolicyName = "ClientPermissions";
 services.AddCors(options =>
 {
-    options.AddPolicy("ClientPermissions",
+    options.AddPolicy(corsPolicyName,
                       policy =>
                       {
                           policy.AllowAnyHeader()
@@ -73,7 +74,7 @@ app.Configuration.Bind(settings);
 
 app.UseHttpsRedirection();
 
-app.UseCors("ClientPermissions");
+app.UseCors(corsPolicyName);
 
 app.UseAuthentication();
 app.UseAuthorization();
