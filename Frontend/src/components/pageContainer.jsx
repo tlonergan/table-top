@@ -32,7 +32,6 @@ const PageContainer = () => {
                     <Routes>
                         <Route path="/" element={<MapHome/>} />
                         <Route path="game/:gameId/board/:boardId" element={<MapBoard />} />
-                        <Route path="board/:boardId" element={<MapBoard />} />
                         <Route path="game/create" element={<CreateGame />} />
                         <Route path="game/:gameId" element={<GameHome />} />
                         <Route path="*" element={<NotFound />} />

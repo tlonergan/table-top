@@ -34,6 +34,19 @@ namespace TableTop.Controllers
             return Ok(boards);
         }
 
+        [HttpGet("{gameId}/board/{boardId}")]
+        [Authorize(AuthorizationScopes.ReadBoards)]
+        public async Task<ActionResult<Board>> Get(string gameId, Guid boardId)
+        {
+            IIdentity? userIdentity = User.Identity;
+            if (userIdentity == null)
+                return Forbid();
+
+            User user = new UserIdentity(userIdentity).User;
+            Board? board = await _boardService.Get(gameId, boardId, user);
+            return Ok(board);
+        }
+
         [HttpPost("{gameId}/board")]
         [Authorize(AuthorizationScopes.WriteBoards)]
         public async Task<ActionResult<Board>> Post(string gameId, Board board)

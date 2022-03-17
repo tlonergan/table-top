@@ -508,4 +508,5 @@ FodyWeavers.xsd
 
 
 **/launchSettings.json
+Backend/TableTop/Properties/launchSettings.json
 Backend/TableTop/App/**

@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
+import { useParams, useNavigate } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
+import { activeBoardAtom } from "../state/board";
 import { boardHubConnection, startHubConnection } from '../state/hubConnections';
+import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 
 import Loading from './loading';
@@ -16,27 +19,56 @@ const MapBoard = () => {
     console.log("Re-render board");
     const movementConnection = useMemo(() => boardHubConnection, []);
 
-    const [, deleteMapToken] = useAtom(removeSelectedMapToken);
+    const { gameId, boardId } = useParams();
+    const navigate = useNavigate();
 
-    const [squaresWide] = useState(25);
-    const [squaresHigh] = useState(25);
+    const [, deleteMapToken] = useAtom(removeSelectedMapToken);
+    const [ board, setBoard ] = useAtom(activeBoardAtom);
+
+    const [boardDimensions, setBoardDimensions] = useState({width: 0, height: 0});
     const [rows, setRows] = useState([]);
 
-    const {user} = useAuth0();
-    console.log("User: ", user);
+    const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
+
+        if(board)
+            return;
+
+        const boardNotFound = () => navigate('/board-not-found');
+        getBoard(getAccessTokenSilently, gameId, boardId)
+        .then(board => {
+            if(!board){
+                boardNotFound();
+                return;
+            }
+
+            setBoard(board);
+        })
+        .catch(boardNotFound);
       }, []);
+
+    useEffect(() => {
+        if(!board)
+            return;
+        if(board.width === boardDimensions.width && board.height === boardDimensions.height)
+            return;
+
+        setBoardDimensions({width: board.width, height: board.height});
+    }, [board]);
 
     useEffect(() => {
         startHubConnection(movementConnection)
             .then (() => setUpBoard());
-    }, [squaresWide, squaresHigh]);
+    }, [boardDimensions]);
 
     const setUpBoard = () => {
         let newRows = [];
         let squareAtoms = [];
+
+        const squaresHigh = boardDimensions.height;
+        const squaresWide = boardDimensions.width;
 
         console.log("Creating all Squares on board");
         for (let i = 0; i < squaresHigh; i++) {
