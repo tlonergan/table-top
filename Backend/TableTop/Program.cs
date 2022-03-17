@@ -48,6 +48,7 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
          {
              options.Authority = authenticationDomain;
              options.Audience = builder.Configuration["AUTHENTICATION_AUDIENCE"];
+             options.IncludeErrorDetails = true;
          });
 
 services.AddAuthorization(options =>

@@ -1,12 +1,15 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 
 import { createBoard, getBoards } from '../services/boardService';
+import { gameBoardsAtom } from '../state/game';
 
 import Loading from './loading';
 import Card from './card';
+import { useAtom } from 'jotai';
 
 const BoardHome = ({boards, gameId}) => {
     const { getAccessTokenSilently } = useAuth0();
+    const [gameBoards, setGameBoards] = useAtom(gameBoardsAtom);
 
     const getBoardContent = () => {
         if(!boards || boards.length === 0)
@@ -25,8 +28,9 @@ const BoardHome = ({boards, gameId}) => {
 
     const createNewBoardClick = () => {
         createBoard(getAccessTokenSilently, gameId)
-        .then(() => {
-            getBoards(gameId);
+        .then((createdBoard) => {
+            console.log("BoardHome => createNewBoardClick => createBoard Then => ", createBoard);
+            setGameBoards([...getBoards, createdBoard]);
         });
     };
 

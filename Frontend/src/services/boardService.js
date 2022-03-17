@@ -1,7 +1,7 @@
 import configuration from "../env.json";
 import { getToken, getRequestHeaders } from "./tokenService";
 
-const hostName = `${configuration.HOST_NAME}api/`;
+const hostName = `${configuration.HOST_NAME}api`;
 
 export const createBoard = async (getAccessTokenSilently, gameId) => {
     const token = await getToken(getAccessTokenSilently, 'write:board');

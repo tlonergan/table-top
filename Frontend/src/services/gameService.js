@@ -31,7 +31,7 @@ export const getGame = async (getAccessTokenSilently, id) =>  {
 
     const token = await getToken(getAccessTokenSilently, 'read:games');
     const getGameResponse = await fetch(
-        `${hostName}/game/${id}`,
+        `${hostName}game/${id}`,
         {
             method: 'GET',
             headers: getRequestHeaders(token),

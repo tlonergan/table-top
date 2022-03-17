@@ -7,6 +7,6 @@
         public const string ReadBoards = "read:boards";
         public const string WriteBoards = "write:boards";
 
-        public static readonly List<string> AllScopes = new() { ReadGames, WriteGames };
+        public static readonly List<string> AllScopes = new() { ReadGames, WriteGames, ReadBoards, WriteBoards };
     }
 }
