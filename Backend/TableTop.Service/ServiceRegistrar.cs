@@ -8,5 +8,6 @@ public static class ServiceRegistrar
     public static void Register(IServiceCollection services)
     {
         services.AddSingleton<IGameService, GameService>();
+        services.AddSingleton<IBoardService, BoardService>();
     }
 }

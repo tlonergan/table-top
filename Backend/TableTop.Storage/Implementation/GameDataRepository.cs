@@ -32,25 +32,23 @@ internal class GameDataRepository : IGameDataRepository
 
         foreach (DataEntities.Game dataGame in await feedIterator.ReadNextAsync())
         {
-            Game game = dataGame.Map();
-            if (dataGame?.Owner?.Id == userId)
-                game.IsGameMaster = true;
-
+            var game = MapGame(dataGame, userId);
             results.Add(game);
         }
 
         return results;
     }
 
-    public async Task<Game?> Get(string id)
+    public async Task<Game?> Get(string id, User user)
     {
+        string userId = user.Id;
         using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
-                                                                        .Where(g => g.Id == id)
+                                                                        .Where(g => g.Id == id && (g.Owner.Id == userId || g.Players.Any(p => p.Id == userId)))
                                                                         .ToFeedIterator();
 
         foreach (DataEntities.Game? game in await feedIterator.ReadNextAsync())
         {
-            return game.Map();
+            return MapGame(game, userId);
         }
 
         return null;
@@ -66,5 +64,25 @@ internal class GameDataRepository : IGameDataRepository
 
         DataEntities.Game? savedGame = itemResponse.Resource;
         return savedGame.Map();
+    }
+
+    public async Task<Board> AddBoardToGame(string gameId, Board board, User user)
+    {
+        board.Id = Guid.NewGuid();
+
+        var patchOperations = new List<PatchOperation>();
+        patchOperations.Add(PatchOperation.Add("/boards/-", board));
+
+        await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(user.Id), patchOperations);
+        return board;
+    }
+
+    private Entities.Game MapGame(DataEntities.Game dataGame, string userId)
+    {
+        Game game = dataGame.Map();
+        if (dataGame?.Owner?.Id == userId)
+            game.IsGameMaster = true;
+
+        return game;
     }
 }

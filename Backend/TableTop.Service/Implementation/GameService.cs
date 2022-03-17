@@ -15,9 +15,9 @@ internal class GameService : IGameService
         _gameDataRepository = gameDataRepository;
     }
 
-    public async Task<Game?> Get(string id)
+    public async Task<Game?> Get(string id, User user)
     {
-        Game? game = await _gameDataRepository.Get(id);
+        Game? game = await _gameDataRepository.Get(id, user);
         return game;
     }
 
@@ -27,21 +27,21 @@ internal class GameService : IGameService
         return createdGame;
     }
 
-    public async Task<List<Game>> GetAll(UserIdentity userIdentity)
+    public async Task<List<Game>> GetAll(User userIdentity)
     {
-        List<Game> games = await _gameDataRepository.GetAll(userIdentity.User);
+        List<Game> games = await _gameDataRepository.GetAll(userIdentity);
         return games;
     }
 
     public async Task SaveMapToken(MapToken mapToken)
     {
-        Game mapTokenGame = mapToken.Game;
-        Game? game = await Get(mapTokenGame.Id);
-        if (game == null)
-        {
-            await CreateGame(mapToken);
-            return;
-        }
+        //Game mapTokenGame = mapToken.Game;
+        //Game? game = await Get(mapTokenGame.Id, TODO);
+        //if (game == null)
+        //{
+        //    await CreateGame(mapToken);
+        //    return;
+        //}
 
         //TODO: Push changes into existing game
     }

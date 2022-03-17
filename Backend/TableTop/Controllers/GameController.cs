@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TableTop.Entities;
 using TableTop.Entities.Authorization;
+using TableTop.Entities.People;
 using TableTop.Service;
 
 namespace TableTop.Controllers
@@ -37,7 +38,13 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<Game>> Get(string id)
         {
-            Game? game = await _gameService.Get(id);
+            IIdentity? userIdentity = User.Identity;
+            if (userIdentity == null)
+                return Forbid();
+
+            User user = new UserIdentity(userIdentity).User;
+
+            Game? game = await _gameService.Get(id, user);
             if (game == null)
                 return NotFound("No game with that ID.");
 
@@ -52,7 +59,8 @@ namespace TableTop.Controllers
             if (userIdentity == null)
                 return Forbid();
 
-            UserIdentity user = new UserIdentity(userIdentity);
+            User user = new UserIdentity(userIdentity).User;
+
             List<Game> games = await _gameService.GetAll(user);
             return Ok(games);
         }
