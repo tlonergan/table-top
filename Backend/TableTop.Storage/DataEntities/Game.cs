@@ -5,6 +5,12 @@ namespace TableTop.Storage.DataEntities;
 
 internal class Game : AuditableEntity
 {
+    public Game()
+    {
+        Boards = new List<Board>();
+        Players = new List<User>();
+    }
+
     public string Id { get; set; }
     public string Name { get; set; }
     public User Owner { get; set; }

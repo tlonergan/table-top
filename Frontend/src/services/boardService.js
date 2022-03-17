@@ -4,7 +4,7 @@ import { getToken, getRequestHeaders } from "./tokenService";
 const hostName = `${configuration.HOST_NAME}api`;
 
 export const createBoard = async (getAccessTokenSilently, gameId) => {
-    const token = await getToken(getAccessTokenSilently, 'write:board');
+    const token = await getToken(getAccessTokenSilently, 'write:boards');
 
     const createBoardResponse = await fetch(
         `${hostName}/game/${gameId}/board`,
@@ -24,7 +24,7 @@ export const createBoard = async (getAccessTokenSilently, gameId) => {
 };
 
 export const getBoards = async (getAccessTokenSilently, gameId) => {
-    const token = await getToken(getAccessTokenSilently, 'read:board');
+    const token = await getToken(getAccessTokenSilently, 'read:boards');
 
     const getBoardsResponse = await fetch(
         `${hostName}/game/${gameId}/board`,

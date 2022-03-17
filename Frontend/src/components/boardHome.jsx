@@ -18,7 +18,7 @@ const BoardHome = ({boards, gameId}) => {
         return (
             <>
                 {boards.map(board => (
-                    <Card name={board.name}>
+                    <Card key={board.id} name={board.name}>
                         <p>Board information?</p>
                     </Card>
                 ))}
@@ -30,7 +30,7 @@ const BoardHome = ({boards, gameId}) => {
         createBoard(getAccessTokenSilently, gameId)
         .then((createdBoard) => {
             console.log("BoardHome => createNewBoardClick => createBoard Then => ", createBoard);
-            setGameBoards([...getBoards, createdBoard]);
+            setGameBoards([...boards, createdBoard]);
         });
     };
 

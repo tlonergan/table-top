@@ -8,7 +8,7 @@ using TableTop.Service;
 
 namespace TableTop.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/game")]
     [ApiController]
     [Authorize]
     public class BoardController : ControllerBase
@@ -20,7 +20,7 @@ namespace TableTop.Controllers
             _boardService = boardService;
         }
 
-        [HttpPost("/game/{gameId}/board")]
+        [HttpGet("{gameId}/board")]
         [Authorize(AuthorizationScopes.ReadBoards)]
         public async Task<ActionResult<List<Board>>> GetAll(string gameId)
         {
@@ -34,7 +34,7 @@ namespace TableTop.Controllers
             return Ok(boards);
         }
 
-        [HttpPost("/game/{gameId}/board")]
+        [HttpPost("{gameId}/board")]
         [Authorize(AuthorizationScopes.WriteBoards)]
         public async Task<ActionResult<Board>> Post(string gameId, Board board)
         {
@@ -42,7 +42,9 @@ namespace TableTop.Controllers
             if (userIdentity == null)
                 return Forbid();
 
-            Board createdBoard = await _boardService.CreateBoard(gameId, board);
+            User user = new UserIdentity(userIdentity).User;
+
+            Board createdBoard = await _boardService.CreateBoard(gameId, board, user);
             return Ok(createdBoard);
         }
     }

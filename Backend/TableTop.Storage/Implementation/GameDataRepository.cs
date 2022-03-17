@@ -66,14 +66,14 @@ internal class GameDataRepository : IGameDataRepository
         return savedGame.Map();
     }
 
-    public async Task<Board> AddBoardToGame(string gameId, Board board)
+    public async Task<Board> AddBoardToGame(string gameId, Board board, User user)
     {
         board.Id = Guid.NewGuid();
 
         var patchOperations = new List<PatchOperation>();
-        patchOperations.Add(PatchOperation.Add("/boards", board));
+        patchOperations.Add(PatchOperation.Add("/boards/-", board));
 
-        await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey("/owner/id"), patchOperations);
+        await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(user.Id), patchOperations);
         return board;
     }
 

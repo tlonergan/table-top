@@ -35,7 +35,7 @@ const GameHome = () => {
         <>
             <p>Welcome to the home of your game, {activeGame.name}.</p>
             <div>
-                <BoardHome boards={activeGame.boards} />
+                <BoardHome boards={activeGame.boards} gameId={gameId} />
             </div>
         </>
     );

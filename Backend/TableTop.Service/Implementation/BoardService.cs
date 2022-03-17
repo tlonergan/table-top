@@ -13,7 +13,7 @@ internal class BoardService : IBoardService
         _gameDataRepository = gameDataRepository;
     }
 
-    public async Task<Board> CreateBoard(string gameId, Board board)
+    public async Task<Board> CreateBoard(string gameId, Board board, User user)
     {
         if (string.IsNullOrWhiteSpace(board.Name))
             board.Name = "Unnamed";
@@ -23,7 +23,7 @@ internal class BoardService : IBoardService
         if (board.Width == default)
             board.Width = 25;
 
-        Board createdBoard = await _gameDataRepository.AddBoardToGame(gameId, board);
+        Board createdBoard = await _gameDataRepository.AddBoardToGame(gameId, board, user);
         return createdBoard;
     }
 

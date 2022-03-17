@@ -5,6 +5,6 @@ namespace TableTop.Service;
 
 public interface IBoardService
 {
-    Task<Board> CreateBoard(string gameId, Board board);
+    Task<Board> CreateBoard(string gameId, Board board, User user);
     Task<List<Board>> GetAll(string gameId, User user);
 }
