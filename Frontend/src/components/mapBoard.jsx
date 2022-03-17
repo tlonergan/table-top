@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
@@ -20,6 +20,7 @@ const MapBoard = () => {
     const movementConnection = useMemo(() => boardHubConnection, []);
 
     const { gameId, boardId } = useParams();
+    const navigate = useNavigate();
 
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
     const [ board, setBoard ] = useAtom(activeBoardAtom);
@@ -27,8 +28,7 @@ const MapBoard = () => {
     const [boardDimensions, setBoardDimensions] = useState({width: 0, height: 0});
     const [rows, setRows] = useState([]);
 
-    const { user, getAccessTokenSilently } = useAuth0();
-    console.log("User: ", user);
+    const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
@@ -36,13 +36,17 @@ const MapBoard = () => {
         if(board)
             return;
 
-        getBoard(getAccessTokenSilently, gameId, board)
+        const boardNotFound = () => navigate('/board-not-found');
+        getBoard(getAccessTokenSilently, gameId, boardId)
         .then(board => {
-            if(!board)
-                return; //TODO: Something?
+            if(!board){
+                boardNotFound();
+                return;
+            }
 
             setBoard(board);
-        });
+        })
+        .catch(boardNotFound);
       }, []);
 
     useEffect(() => {
