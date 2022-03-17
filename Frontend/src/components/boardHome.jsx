@@ -1,4 +1,5 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
+import { Link } from "react-router-dom";
 
 import { createBoard, getBoards } from '../services/boardService';
 import { gameBoardsAtom } from '../state/game';
@@ -19,7 +20,9 @@ const BoardHome = ({boards, gameId}) => {
             <>
                 {boards.map(board => (
                     <Card key={board.id} name={board.name}>
-                        <p>Board information?</p>
+                        <Link to={`/board/${board.id}`}>Go To Board</Link>
+                        <br/>
+                        <Link to={`board/${board.id}`}>Go To Game Board</Link>
                     </Card>
                 ))}
             </>

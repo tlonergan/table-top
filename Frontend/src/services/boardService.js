@@ -1,5 +1,5 @@
 import configuration from "../env.json";
-import { getToken, getRequestHeaders } from "./tokenService";
+import { getToken, getRequestHeaders } from "./apiRequestHelper";
 
 const hostName = `${configuration.HOST_NAME}api`;
 

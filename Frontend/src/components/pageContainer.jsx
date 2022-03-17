@@ -31,10 +31,11 @@ const PageContainer = () => {
                     {/* <CanvasContainer></CanvasContainer> */}
                     <Routes>
                         <Route path="/" element={<MapHome/>} />
-                        <Route path="game/:gameId" element={<GameHome />} />
-                        <Route path="game/create" element={<CreateGame />} />
+                        <Route path="game/:gameId/board/:boardId" element={<MapBoard />} />
                         <Route path="board/:boardId" element={<MapBoard />} />
-                        <Route path="*" element={<MapHome />} />
+                        <Route path="game/create" element={<CreateGame />} />
+                        <Route path="game/:gameId" element={<GameHome />} />
+                        <Route path="*" element={<NotFound />} />
                     </Routes>
                 </div>
             </BrowserRouter>
