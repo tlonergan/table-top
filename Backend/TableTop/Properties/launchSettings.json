@@ -10,7 +10,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DOCUMENT_STORE_URL": "https://table-top-account.documents.azure.com:443/",
-        "PRIMARY_KEY": "{Replace me with key}"
+        "PRIMARY_KEY": "{Replace me with key}",
         "AUTHENTICATION_AUDIENCE": "https://table-top-map.azurewebsites.net/",
         "AUTHENTICATION_AUTHORITY": "https://dev-27agpw4g.us.auth0.com/"
       }
