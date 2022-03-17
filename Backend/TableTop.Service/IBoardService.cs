@@ -7,4 +7,5 @@ public interface IBoardService
 {
     Task<Board> CreateBoard(string gameId, Board board, User user);
     Task<List<Board>> GetAll(string gameId, User user);
+    Task<Board?> Get(string gameId, Guid boardId, User user);
 }

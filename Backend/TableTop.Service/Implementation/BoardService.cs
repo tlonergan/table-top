@@ -35,4 +35,12 @@ internal class BoardService : IBoardService
 
         return game.Boards;
     }
+
+    public async Task<Board?> Get(string gameId, Guid boardId, User user)
+    {
+        Game? game = await _gameDataRepository.Get(gameId, user);
+        Board? board = game?.Boards.FirstOrDefault(b => b.Id == boardId);
+
+        return board;
+    }
 }

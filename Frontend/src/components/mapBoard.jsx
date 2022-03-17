@@ -19,13 +19,12 @@ const MapBoard = () => {
     console.log("Re-render board");
     const movementConnection = useMemo(() => boardHubConnection, []);
 
-    const { boardId } = useParams();
+    const { gameId, boardId } = useParams();
 
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
     const [ board, setBoard ] = useAtom(activeBoardAtom);
 
-    const [squaresWide] = useState(0);
-    const [squaresHigh] = useState(0);
+    const [boardDimensions, setBoardDimensions] = useState({width: 0, height: 0});
     const [rows, setRows] = useState([]);
 
     const { user, getAccessTokenSilently } = useAuth0();
@@ -37,18 +36,35 @@ const MapBoard = () => {
         if(board)
             return;
 
-        getBoard()
-        .then();
+        getBoard(getAccessTokenSilently, gameId, board)
+        .then(board => {
+            if(!board)
+                return; //TODO: Something?
+
+            setBoard(board);
+        });
       }, []);
+
+    useEffect(() => {
+        if(!board)
+            return;
+        if(board.width === boardDimensions.width && board.height === boardDimensions.height)
+            return;
+
+        setBoardDimensions({width: board.width, height: board.height});
+    }, [board]);
 
     useEffect(() => {
         startHubConnection(movementConnection)
             .then (() => setUpBoard());
-    }, [squaresWide, squaresHigh]);
+    }, [boardDimensions]);
 
     const setUpBoard = () => {
         let newRows = [];
         let squareAtoms = [];
+
+        const squaresHigh = boardDimensions.height;
+        const squaresWide = boardDimensions.width;
 
         console.log("Creating all Squares on board");
         for (let i = 0; i < squaresHigh; i++) {
