@@ -33,7 +33,7 @@ const BoardHome = ({boards, gameId}) => {
         createBoard(getAccessTokenSilently, gameId)
         .then((createdBoard) => {
             console.log("BoardHome => createNewBoardClick => createBoard Then => ", createBoard);
-            setGameBoards([...boards, createdBoard]);
+            setGameBoards([...gameBoards, createdBoard]);
         });
     };
 

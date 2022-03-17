@@ -3,6 +3,8 @@ import { v4 as uuid } from 'uuid';
 
 const allMapTokenAtoms = atom([]);
 
+export const activeBoardAtom = atom(null);
+
 export const createMapToken = (position, tokenAtom, mapTokenId) => {
     if(!mapTokenId)
         mapTokenId = uuid();

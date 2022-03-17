@@ -1,11 +1,14 @@
 import { useState, useEffect, useMemo } from "react";
 import { atom, useAtom } from 'jotai';
+import { useParams } from 'react-router-dom';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
+import { activeBoardAtom } from "../state/board";
 import { boardHubConnection, startHubConnection } from '../state/hubConnections';
+import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 
 import Loading from './loading';
@@ -16,17 +19,26 @@ const MapBoard = () => {
     console.log("Re-render board");
     const movementConnection = useMemo(() => boardHubConnection, []);
 
-    const [, deleteMapToken] = useAtom(removeSelectedMapToken);
+    const { boardId } = useParams();
 
-    const [squaresWide] = useState(25);
-    const [squaresHigh] = useState(25);
+    const [, deleteMapToken] = useAtom(removeSelectedMapToken);
+    const [ board, setBoard ] = useAtom(activeBoardAtom);
+
+    const [squaresWide] = useState(0);
+    const [squaresHigh] = useState(0);
     const [rows, setRows] = useState([]);
 
-    const {user} = useAuth0();
+    const { user, getAccessTokenSilently } = useAuth0();
     console.log("User: ", user);
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
+
+        if(board)
+            return;
+
+        getBoard()
+        .then();
       }, []);
 
     useEffect(() => {

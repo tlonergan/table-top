@@ -42,3 +42,22 @@ export const getBoards = async (getAccessTokenSilently, gameId) => {
 
     return await getBoardsResponse.json();
 };
+
+export const getBoard = async (getAccessTokenSilently, gameId, boardId) => {
+    const token = await getToken(getAccessTokenSilently, 'read:boards');
+
+    const getBoardResponse = await fetch(
+        `${hostName}/game/${gameId}/board/${boardId}`,
+        {
+            method: 'GET',
+            headers: getRequestHeaders(token),
+        },
+    ).catch(console.error);
+
+    if(!getBoardResponse.ok){
+        console.error("Unable to retrieve board.", getBoardResponse);
+        return;
+    }
+
+    return await getBoardResponse.json();
+};
