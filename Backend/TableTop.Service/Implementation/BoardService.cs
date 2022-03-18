@@ -43,4 +43,14 @@ internal class BoardService : IBoardService
 
         return board;
     }
+
+    public async Task SaveMapToken(MapToken mapToken, User user)
+    {
+        await _gameDataRepository.SaveMapToken(mapToken, user);
+    }
+
+    public async Task DeleteMapToken(MapToken mapToken, User user)
+    {
+        await _gameDataRepository.DeleteMapToken(mapToken, user);
+    }
 }

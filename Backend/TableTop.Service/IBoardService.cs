@@ -8,4 +8,6 @@ public interface IBoardService
     Task<Board> CreateBoard(string gameId, Board board, User user);
     Task<List<Board>> GetAll(string gameId, User user);
     Task<Board?> Get(string gameId, Guid boardId, User user);
+    Task SaveMapToken(MapToken mapToken, User user);
+    Task DeleteMapToken(MapToken mapToken, User user);
 }

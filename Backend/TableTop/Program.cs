@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Primitives;
 using TableTop;
 using TableTop.Authorization;
 using TableTop.Entities.Authorization;
@@ -42,6 +43,7 @@ services.AddCors(options =>
                       });
 });
 
+string boardHubPath = "/hub/board";
 string authenticationDomain = builder.Configuration["AUTHENTICATION_AUTHORITY"];
 services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
@@ -49,6 +51,21 @@ services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
              options.Authority = authenticationDomain;
              options.Audience = builder.Configuration["AUTHENTICATION_AUDIENCE"];
              options.IncludeErrorDetails = true;
+
+             JwtBearerEvents jwtEvent = new JwtBearerEvents();
+             jwtEvent.OnMessageReceived = context =>
+             {
+                 PathString path = context.HttpContext.Request.Path;
+                 if (string.IsNullOrWhiteSpace(path) || !path.StartsWithSegments(boardHubPath))
+                     return Task.CompletedTask;
+
+                 StringValues accessToken = context.Request.Query["access_token"];
+
+                 context.Token = accessToken;
+                 return Task.CompletedTask;
+             };
+
+             options.Events = jwtEvent;
          });
 
 services.AddAuthorization(options =>
@@ -92,6 +109,6 @@ app.UseFileServer(new FileServerOptions
 app.MapFallbackToFile("index.html", new StaticFileOptions { FileProvider = physicalFileProvider, RequestPath = string.Empty });
 
 app.MapControllers();
-app.MapHub<BoardHub>("/board-hub");
+app.MapHub<BoardHub>(boardHubPath);
 
 app.Run();

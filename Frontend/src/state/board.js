@@ -9,7 +9,7 @@ export const createMapToken = (position, tokenAtom, mapTokenId) => {
     if(!mapTokenId)
         mapTokenId = uuid();
 
-    const mapTokenAtom = atom({id: mapTokenId, tokenAtom, position});
+    const mapTokenAtom = atom({mapTokenId: mapTokenId, tokenAtom, position});
 
     return mapTokenAtom;
 };
@@ -21,7 +21,7 @@ export const addMapTokenAtom = atom(
         const matchingAtom = previousMapTokenAtoms.find((mapTokenAtom) => {
             const newMapToken = get(updatedItem);
             const previousMapToken = get(mapTokenAtom);
-            return previousMapToken.id === newMapToken.id;
+            return previousMapToken.mapTokenId === newMapToken.mapTokenId;
         });
         
         if(!matchingAtom)

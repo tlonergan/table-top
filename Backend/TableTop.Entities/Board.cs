@@ -2,6 +2,11 @@
 
 public class Board
 {
+    public Board()
+    {
+        MapTokens = new List<MapToken>();
+    }
+
     public Guid Id { get; set; }
     public string Name { get; set; }
     public List<MapToken> MapTokens { get; set; }

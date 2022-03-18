@@ -32,7 +32,7 @@ internal class GameDataRepository : IGameDataRepository
 
         foreach (DataEntities.Game dataGame in await feedIterator.ReadNextAsync())
         {
-            var game = MapGame(dataGame, userId);
+            Game game = MapGame(dataGame, userId);
             results.Add(game);
         }
 
@@ -60,6 +60,7 @@ internal class GameDataRepository : IGameDataRepository
                       .ToString();
 
         DataEntities.Game dataGame = DataEntities.Game.Map(game);
+
         ItemResponse<DataEntities.Game> itemResponse = await _container.CreateItemAsync(dataGame);
 
         DataEntities.Game? savedGame = itemResponse.Resource;
@@ -70,14 +71,38 @@ internal class GameDataRepository : IGameDataRepository
     {
         board.Id = Guid.NewGuid();
 
-        var patchOperations = new List<PatchOperation>();
-        patchOperations.Add(PatchOperation.Add("/boards/-", board));
+        List<PatchOperation> patchOperations = new List<PatchOperation>();
+        patchOperations.Add(PatchOperation.Add($"/boards/{board.Id}", DataEntities.Board.Map(board)));
 
         await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(user.Id), patchOperations);
         return board;
     }
 
-    private Entities.Game MapGame(DataEntities.Game dataGame, string userId)
+    public async Task SaveMapToken(MapToken mapToken, User user)
+    {
+        if (mapToken.MapTokenId == default)
+            mapToken.MapTokenId = Guid.NewGuid();
+
+        DataEntities.MapToken dataMapToken = DataEntities.MapToken.Map(mapToken);
+
+        List<PatchOperation> patchOperations = new List<PatchOperation>();
+        patchOperations.Add(PatchOperation.Add($"/boards/{mapToken.BoardId}/mapTokens/{mapToken.MapTokenId}", dataMapToken));
+
+        await _container.PatchItemAsync<DataEntities.Game>(mapToken.Game.Id, new PartitionKey(user.Id), patchOperations);
+    }
+
+    public async Task DeleteMapToken(MapToken mapToken, User user)
+    {
+        if (mapToken.MapTokenId == default)
+            throw new Exception("Map Token needs an ID");
+
+        List<PatchOperation> patchOperations = new List<PatchOperation>();
+        patchOperations.Add(PatchOperation.Remove($"/boards/{mapToken.BoardId}/mapTokens/{mapToken.MapTokenId}"));
+
+        await _container.PatchItemAsync<DataEntities.Game>(mapToken.Game.Id, new PartitionKey(user.Id), patchOperations);
+    }
+
+    private Game MapGame(DataEntities.Game dataGame, string userId)
     {
         Game game = dataGame.Map();
         if (dataGame?.Owner?.Id == userId)
