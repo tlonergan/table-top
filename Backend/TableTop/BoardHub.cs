@@ -31,13 +31,17 @@ public class BoardHub : Hub
 
     public async Task DeleteToken(MapToken mapToken)
     {
-        ClaimsPrincipal? contextUser = this.Context.User;
-        if (contextUser == null)
-            return;
+        if(Equals(mapToken.Position, new Position(-1, -1)))
+        {
+            ClaimsPrincipal? contextUser = this.Context.User;
+            if (contextUser == null)
+                return;
 
-        var user = new UserIdentity(contextUser.Identity).User;
+            var user = new UserIdentity(contextUser.Identity).User;
 
-        await _boardService.DeleteMapToken(mapToken, user);
+            await _boardService.DeleteMapToken(mapToken, user);
+        }
+
         await Clients.All.SendAsync("TokenDeleted", mapToken);
     }
 }

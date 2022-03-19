@@ -6,7 +6,7 @@ public class MapToken : Token
     {
         Position = new Position { X = -1, Y = -1 };
     }
-    
+
     public Guid MapTokenId { get; set; }
     public Guid BoardId { get; set; }
     public Position Position { get; set; }
