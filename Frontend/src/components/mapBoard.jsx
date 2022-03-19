@@ -33,18 +33,16 @@ const MapBoard = () => {
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
         getBoardHubConnectection(getAccessTokenSilently).then(setMovementConnection);
-        if(board)
-            return;
-
+        
         const boardNotFound = () => navigate('/board-not-found');
         getBoard(getAccessTokenSilently, gameId, boardId)
-        .then(board => {
-            if(!board){
+        .then(retreivedBoard => {
+            if(!retreivedBoard){
                 boardNotFound();
                 return;
             }
 
-            setBoard(board);
+            setBoard(retreivedBoard);
         })
         .catch(boardNotFound);
       }, []);
