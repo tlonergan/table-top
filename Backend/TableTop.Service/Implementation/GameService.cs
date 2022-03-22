@@ -30,4 +30,13 @@ internal class GameService : IGameService
         List<Game> games = await _gameDataRepository.GetAll(userIdentity);
         return games;
     }
+
+    public async Task AddPlayer(string gameId, User player)
+    {
+        var game = await _gameDataRepository.Get(gameId);
+        if (game == null)
+            return;
+
+        await _gameDataRepository.AddPlayer(gameId, player, game.Owner);
+    }
 }

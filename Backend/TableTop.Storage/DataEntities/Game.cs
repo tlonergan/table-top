@@ -8,7 +8,7 @@ internal class Game : AuditableEntity
     public Game()
     {
         Boards = new Dictionary<Guid, Board>();
-        Players = new List<User>();
+        Players = new Dictionary<string, User>();
     }
 
     public string Id { get; set; }
@@ -16,7 +16,7 @@ internal class Game : AuditableEntity
     public User Owner { get; set; }
 
     public Dictionary<Guid, Board> Boards { get; set; }
-    public List<User> Players { get; set; }
+    public Dictionary<string, User> Players { get; set; }
 
     public static Game Map(Entities.Game source)
     {
@@ -26,7 +26,7 @@ internal class Game : AuditableEntity
             Boards = source.Boards.ToDictionary(b => b.Id, Board.Map),
             Id = source.Id,
             Owner = source.Owner,
-            Players = source.Players,
+            Players = source.Players.ToDictionary(p => p.Id, p => p),
             Created = source.Created,
             CreatedBy = source.CreatedBy,
             Updated = source.Updated,
@@ -39,7 +39,8 @@ internal class Game : AuditableEntity
         return new Entities.Game
         {
             Name = Name,
-            Players = Players,
+            Players = Players.Select(p => p.Value)
+                             .ToList(),
             Boards = Boards.Select(b => b.Value.Map())
                            .ToList(),
             Created = Created,
