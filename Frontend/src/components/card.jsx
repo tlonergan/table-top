@@ -15,6 +15,17 @@ const Tab = ({collapsable, name, children, buttons}) => {
         setIsCollapsed(!isCollapsed);
     };
 
+    const getButtons = () => {
+        if(!buttons || buttons.length === 0)
+            return;
+
+        return (
+            <div className='cardButtons'>
+                {buttons.map(button => <a key={button.display} onClick={button.onClick}>{button.display}</a>)}
+            </div>
+        );
+    };
+
     return (
         <div className='card'>
             <div className={"cardHeader" + (isCollapsed ? " contentCollapsed": "")} onClick={onHeaderCliced}>
@@ -23,9 +34,7 @@ const Tab = ({collapsable, name, children, buttons}) => {
             <div className={'cardBody' + (isCollapsed? " collapsed": "")}>
                 {children}
             </div>
-            <div className='cardButtons'>
-                {buttons.map(button => <a key={button.display} onClick={button.onClick}>{button.display}</a>)}
-            </div>
+            {getButtons()}
         </div>
     );
 }
