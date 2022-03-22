@@ -8,6 +8,7 @@ body {
   font-size: 18px;
   font-family: Open Sans,Poppins,sans-serif;
   background: ghostwhite;
+  color: #161616;
 }
 
 a {
@@ -51,7 +52,7 @@ button:disabled {
 h2 a {
  cursor: pointer;
  text-decoration: underline;
- color: lightgrey;
+ color: grey;
 }
 
 h2 > a {
@@ -73,6 +74,7 @@ h2 > a {
   margin-bottom: 16px;
   border: 0;
   border-bottom: 8px;
+  border-color: #161616;
   border-style: solid;
   font-size: 1.25em;
   justify-content: space-between;
