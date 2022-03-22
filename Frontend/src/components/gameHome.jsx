@@ -18,6 +18,7 @@ const GameHome = () => {
     useEffect(() => {
         getGame(getAccessTokenSilently, gameId)
         .then((game) => {
+            console.log("Active Game: ", game);
             setActiveGame(game);
             setIsLoaded(true);
         });
@@ -26,16 +27,28 @@ const GameHome = () => {
     if(!isLoaded)
         return (<Loading />);
 
-    const getBoardSection = () => {
-        if(!activeGame.boards)
-            return (<p>Game does not have any boards, yet. <a>Create One</a></p>);
-    };
+    const copyInvitationClicked = () => {
+        const invitationAddress = `${window.location.origin}/game/${activeGame.id}/invite`;
+        navigator.clipboard.writeText(invitationAddress);
+    }
+
+    const getGameMasterSection = () => {
+        if(!activeGame.isGameMaster)
+            return <></>;
+
+        return (
+            <>
+                <p>Invite Players! <a onClick={copyInvitationClicked}>Copy Invitation Link</a></p>
+                <BoardHome boards={activeGame.boards} gameId={gameId} />
+            </>
+        );
+    }
 
     return (
         <>
             <p>Welcome to the home of your game, {activeGame.name}.</p>
             <div>
-                <BoardHome boards={activeGame.boards} gameId={gameId} />
+                {getGameMasterSection()}
             </div>
         </>
     );
