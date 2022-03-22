@@ -7,7 +7,7 @@ import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
 import { activeBoardAtom } from "../state/board";
-import { boardHubConnection, startHubConnection } from '../state/hubConnections';
+import { getBoardHubConnectection, startHubConnection } from '../state/hubConnections';
 import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 
@@ -17,34 +17,32 @@ import TokenBox from './tokenBox';
 
 const MapBoard = () => {
     console.log("Re-render board");
-    const movementConnection = useMemo(() => boardHubConnection, []);
 
     const { gameId, boardId } = useParams();
     const navigate = useNavigate();
 
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
     const [ board, setBoard ] = useAtom(activeBoardAtom);
-
-    const [boardDimensions, setBoardDimensions] = useState({width: 0, height: 0});
-    const [rows, setRows] = useState([]);
+    
+    const [ movementConnection, setMovementConnection ] = useState(null);
+    const [ boardDimensions, setBoardDimensions ] = useState({width: 0, height: 0});
+    const [ rows, setRows ] = useState([]);
 
     const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
-
-        if(board)
-            return;
-
+        getBoardHubConnectection(getAccessTokenSilently).then(setMovementConnection);
+        
         const boardNotFound = () => navigate('/board-not-found');
         getBoard(getAccessTokenSilently, gameId, boardId)
-        .then(board => {
-            if(!board){
+        .then(retreivedBoard => {
+            if(!retreivedBoard){
                 boardNotFound();
                 return;
             }
 
-            setBoard(board);
+            setBoard(retreivedBoard);
         })
         .catch(boardNotFound);
       }, []);
@@ -59,9 +57,11 @@ const MapBoard = () => {
     }, [board]);
 
     useEffect(() => {
-        startHubConnection(movementConnection)
-            .then (() => setUpBoard());
-    }, [boardDimensions]);
+        if(!movementConnection)
+            return;
+
+        setUpBoard();
+    }, [boardDimensions, movementConnection]);
 
     const setUpBoard = () => {
         let newRows = [];
@@ -77,8 +77,10 @@ const MapBoard = () => {
                 const boardSquareAtom = atom({position: {x: i, y: j}, contents: []});
                 boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
 
+                const squareContents = board.mapTokens.filter(mapToken => mapToken.position.x === i && mapToken.position.y === j);
+
                 squareAtoms.push(boardSquareAtom);
-                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} />));
+                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} gameId={gameId} boardId={boardId} contents={squareContents} />));
             }
     
             newRows.push((<div className="boardColumn" key={"row" + i}>{columns}</div>));

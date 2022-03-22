@@ -10,7 +10,7 @@ import { tokensAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
-const MapSquare = ({state, movementConnection}) => {
+const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
     console.log("MapSquare Render");
     
     const [square, setSquare] = useAtom(state);
@@ -22,6 +22,18 @@ const MapSquare = ({state, movementConnection}) => {
     
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
+        
+        const initialContents = [];
+        contents.forEach(content => {
+            const token = tokens.find(t=> t.tokenId === content.tokenId);
+
+            console.log("existing token atom", token, content.tokenId, tokens);
+            const mapTokenAtom = createMapToken(square.squarePosition, token.atom, content.mapTokenId);
+            initialContents.push(mapTokenAtom)
+            addMapToken(mapTokenAtom);
+        });
+
+        setSquare({... square, contents: [...square.contents, ...initialContents]});
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -49,8 +61,8 @@ const MapSquare = ({state, movementConnection}) => {
                     return;
                 if(!token)
                     return;
-                    
-                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {postion: square.position, id: mapToken.id, tokenId: token.id});
+
+                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {position: square.position, mapTokenId: mapToken.mapTokenId, tokenId: token.tokenId, game: { id: gameId}, boardId});
             });
         },
     }));
@@ -61,12 +73,12 @@ const MapSquare = ({state, movementConnection}) => {
         if(squarePosition.x !== position.x || squarePosition.y !== position.y)
             return;
 
-        const mapTokenId = mapToken.id;
+        const mapTokenId = mapToken.mapTokenId;
         getMapTokens().then((mapTokens) => {
-            const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.id === mapTokenId);
+            const existingMapToken = mapTokens.find(existingMapToken => existingMapToken.mapTokenId === mapTokenId);
             if(!existingMapToken){
                 const tokenId = mapToken.tokenId;
-                const token = tokens.find(t => t.id === tokenId);
+                const token = tokens.find(t => t.tokenId === tokenId);
                 if(!token){
                     return;
                 }

@@ -2,12 +2,26 @@
 
 namespace TableTop.Storage.DataEntities;
 
-internal class MapToken
+internal class MapToken : Token
 {
-    public Token Token { get; set; }
+    public Guid MapTokenId { get; set; }
+    public Position Position { get; set; }
 
-    public static MapToken Map(Entities.MapToken mapToken)
+    public static MapToken Map(Entities.MapToken source)
     {
-        return new MapToken { Token = Token.Map(mapToken) };
+        MapToken mapToken = Map<MapToken>(source);
+        mapToken.Position = source.Position;
+        mapToken.MapTokenId = source.MapTokenId;
+
+        return mapToken;
+    }
+
+    public new Entities.MapToken Map()
+    {
+        Entities.MapToken mapToken = base.Map<Entities.MapToken>();
+        mapToken.MapTokenId = MapTokenId;
+        mapToken.Position = Position;
+
+        return mapToken;
     }
 }

@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Extention\" />
     <Folder Include="People\" />
   </ItemGroup>
 
