@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Tab = ({collapsable, name, children}) => {
+const Tab = ({collapsable, name, children, buttons}) => {
     const [isCollapsed, setIsCollapsed] = useState(true);
 
     useEffect(()=> {
@@ -20,8 +20,11 @@ const Tab = ({collapsable, name, children}) => {
             <div className={"cardHeader" + (isCollapsed ? " contentCollapsed": "")} onClick={onHeaderCliced}>
                 {name}
             </div>
-            <div className={isCollapsed? " collapsed": ""}>
+            <div className={'cardBody' + (isCollapsed? " collapsed": "")}>
                 {children}
+            </div>
+            <div className='cardButtons'>
+                {buttons.map(button => <a key={button.display} onClick={button.onClick}>{button.display}</a>)}
             </div>
         </div>
     );

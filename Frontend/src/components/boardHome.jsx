@@ -17,7 +17,7 @@ const BoardHome = ({boards, gameId}) => {
 
         return (
             <>
-                {gameBoards.map(board => (<BoardSummary key={board} board={board} />))}
+                {gameBoards.map(board => (<BoardSummary key={board.id} board={board} />))}
             </>
         );
     };
@@ -33,7 +33,7 @@ const BoardHome = ({boards, gameId}) => {
     return (
         <>
             <h2>Boards <a onClick={createNewBoardClick}>Create New</a></h2>
-            <div>
+            <div className='cardCarrier'>
                 {getBoardContent()}
             </div>
         </>
