@@ -12,6 +12,7 @@ import NotFound from './notFound';
 import MapBoard from './mapBoard';
 import CreateGame from './createGame';
 import GameHome from './gameHome';
+import GameInvite from './gameInvite';
 
 const PageContainer = () => {
     const { logout } = useAuth0();
@@ -31,8 +32,9 @@ const PageContainer = () => {
                     {/* <CanvasContainer></CanvasContainer> */}
                     <Routes>
                         <Route path="/" element={<MapHome/>} />
-                        <Route path="game/:gameId/board/:boardId" element={<MapBoard />} />
                         <Route path="game/create" element={<CreateGame />} />
+                        <Route path="game/:gameId/invite" element={<GameInvite />} />
+                        <Route path="game/:gameId/board/:boardId" element={<MapBoard />} />
                         <Route path="game/:gameId" element={<GameHome />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>

@@ -34,7 +34,7 @@ namespace TableTop.Controllers
             return Ok(createdGame);
         }
 
-        [HttpGet("{Id}")]
+        [HttpGet("{id}")]
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<Game>> Get(string id)
         {
@@ -63,6 +63,20 @@ namespace TableTop.Controllers
 
             List<Game> games = await _gameService.GetAll(user);
             return Ok(games);
+        }
+
+        [HttpPost("{id}/player")]
+        [Authorize]
+        public async Task<ActionResult> AddPlayer(string id)
+        {
+            IIdentity? userIdentity = User.Identity;
+            if (userIdentity == null)
+                return Forbid();
+
+            User user = new UserIdentity(userIdentity).User;
+
+            await _gameService.AddPlayer(id, user);
+            return Ok();
         }
     }
 }

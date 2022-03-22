@@ -76,3 +76,28 @@ export const createGame = async (game, getAccessTokenSilently) => {
 
     return await createGameResponse.json();
 }
+
+export const addPlayer = async (getAccessTokenSilently, gameId) => {
+    const token = await getToken(getAccessTokenSilently, 'write:games');
+    
+    let isSuccess = true;
+    const addPlayerResponse = await fetch(
+        `${hostName}game/${gameId}/player`,
+        {
+            method: 'POST',
+            headers: getRequestHeaders(token)
+        },
+        console.error
+    )
+    .catch((error) => {
+        console.error(error);
+        isSuccess = false;
+    });
+
+    if(!isSuccess || !addPlayerResponse.ok){
+        console.error("Error adding player to game.", addPlayerResponse);
+        return false;
+    }
+
+    return isSuccess;
+}

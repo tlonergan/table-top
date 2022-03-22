@@ -10,6 +10,15 @@ body {
   background: ghostwhite;
 }
 
+a {
+  cursor: pointer;
+  color: blue;
+}
+
+a:hover {
+  color: grey;
+}
+
 select {
   width: 320px;
   padding: 0;
@@ -37,10 +46,6 @@ button:hover {
 }
 
 button:disabled {
-}
-
-a:hover {
-  color: grey;
 }
 
 h2 a {

@@ -27,7 +27,7 @@ internal class GameDataRepository : IGameDataRepository
         string userId = user.Id;
 
         using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
-                                                                        .Where(g => g.Owner.Id == userId || g.Players.Any(p => p.Id == userId))
+                                                                        .Where(g => g.Owner.Id == userId || g.Players[userId].IsDefined())
                                                                         .ToFeedIterator();
 
         foreach (DataEntities.Game dataGame in await feedIterator.ReadNextAsync())
@@ -43,12 +43,26 @@ internal class GameDataRepository : IGameDataRepository
     {
         string userId = user.Id;
         using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
-                                                                        .Where(g => g.Id == id && (g.Owner.Id == userId || g.Players.Any(p => p.Id == userId)))
+                                                                        .Where(g => g.Id == id && (g.Owner.Id == userId || g.Players[userId].IsDefined()))
                                                                         .ToFeedIterator();
 
         foreach (DataEntities.Game? game in await feedIterator.ReadNextAsync())
         {
             return MapGame(game, userId);
+        }
+
+        return null;
+    }
+
+    public async Task<Game?> Get(string gameId)
+    {
+        using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
+                                                                        .Where(g => g.Id == gameId)
+                                                                        .ToFeedIterator();
+
+        foreach (DataEntities.Game? game in await feedIterator.ReadNextAsync())
+        {
+            return MapGame(game, string.Empty);
         }
 
         return null;
@@ -100,6 +114,14 @@ internal class GameDataRepository : IGameDataRepository
         patchOperations.Add(PatchOperation.Remove($"/boards/{mapToken.BoardId}/mapTokens/{mapToken.MapTokenId}"));
 
         await _container.PatchItemAsync<DataEntities.Game>(mapToken.Game.Id, new PartitionKey(user.Id), patchOperations);
+    }
+
+    public async Task AddPlayer(string gameId, User player, User gameOwner)
+    {
+        List<PatchOperation> patchOperations = new List<PatchOperation>();
+        patchOperations.Add(PatchOperation.Add($"/players/{player.Id}", player));
+
+        await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(gameOwner.Id), patchOperations);
     }
 
     private Game MapGame(DataEntities.Game dataGame, string userId)

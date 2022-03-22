@@ -23,7 +23,7 @@ const MapHome = () => {
             <>
                 {games.map(g => (
                     <React.Fragment key={g.id}>
-                        <Card name={`${g.name} (Game Master)`}>
+                        <Card name={`${g.name} ${g.isGameMaster ? "(Game Master)" : ""}`}>
                             <p key={g.id}>{g.name}</p>
                             <Link to={`game/${g.id}`}>Go to game</Link>
                         </Card>
