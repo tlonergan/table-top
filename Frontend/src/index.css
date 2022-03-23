@@ -20,6 +20,15 @@ a:hover {
   color: #31c898;
 }
 
+a.headerLink {
+  margin-top: 4px;
+  color: #ECDBBA;
+}
+
+a.headerLink:hover {
+  color: #e3baec;
+}
+
 select {
   width: 320px;
   padding: 0;
@@ -49,15 +58,13 @@ button:hover {
 button:disabled {
 }
 
+h1 a,
 h2 a {
  cursor: pointer;
  text-decoration: underline;
  color: grey;
-}
-
-h2 > a {
-  font-size: 18px;
-  padding-left: 16px;
+ font-size: 18px;
+ padding-left: 8px;
 }
 
 #root {
@@ -130,6 +137,7 @@ h2 > a {
 .cardCarrier{
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .card {

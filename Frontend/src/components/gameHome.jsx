@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useAtom } from "jotai";
 import { useParams } from 'react-router-dom';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from '@fortawesome/free-solid-svg-icons';
 
 import Loading from "./loading";
 import BoardHome from "./boardHome";
@@ -50,7 +52,11 @@ const GameHome = () => {
 
     return (
         <>
-            <p>Welcome to the home of your game, {activeGame.name}.</p>
+            <h1>
+                <span>{activeGame.name}</span>
+                <a><FontAwesomeIcon icon={faPencil} /></a>
+            </h1>
+            <p>Welcome to the home of your game.</p>
             <div>
                 {getGameMasterSection()}
             </div>

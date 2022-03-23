@@ -33,12 +33,18 @@ const BoardHome = ({boards, gameId}) => {
     };
 
     return (
-        <>
-            <h2>Boards <a onClick={createNewBoardClick}>Create New</a></h2>
+        <div style={{textAlign: 'left',border: "solid", borderWidth: '2px', borderColor: '#161616', borderRadius: '7px'}}>
+            <div style={{marginBottom: '16px', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignContent: 'center', background: '#346751', color: 'whitesmoke'}}>
+                <h2 style={{padding: '0', margin: '0'}}>
+                    <span>Boards</span>
+                </h2>
+                <a className='headerLink' onClick={createNewBoardClick}>Create New</a>
+            </div>
+            
             <div className='cardCarrier'>
                 {getBoardContent()}
             </div>
-        </>
+        </div>
     );
 };
 
