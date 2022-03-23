@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TableTop.Entities;
 using TableTop.Entities.Authorization;
+using TableTop.Entities.Extension;
 using TableTop.Entities.People;
 using TableTop.Service;
 
@@ -18,6 +19,20 @@ namespace TableTop.Controllers
         public GameController(IGameService gameService)
         {
             _gameService = gameService;
+        }
+
+        [HttpGet]
+        [Authorize(AuthorizationScopes.ReadGames)]
+        public async Task<ActionResult<List<Game>>> GetAll()
+        {
+            IIdentity? userIdentity = User.Identity;
+            if (userIdentity == null)
+                return Forbid();
+
+            User user = new UserIdentity(userIdentity).User;
+
+            List<Game> games = await _gameService.GetAll(user);
+            return Ok(games);
         }
 
         [HttpPost]
@@ -51,18 +66,16 @@ namespace TableTop.Controllers
             return Ok(game);
         }
 
-        [HttpGet]
-        [Authorize(AuthorizationScopes.ReadGames)]
-        public async Task<ActionResult<List<Game>>> GetAll()
+        [HttpPut("{id}")]
+        [Authorize(AuthorizationScopes.WriteGames)]
+        public async Task<ActionResult<Game>> Put(string id, Game game)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
 
-            User user = new UserIdentity(userIdentity).User;
-
-            List<Game> games = await _gameService.GetAll(user);
-            return Ok(games);
+            Game updatedGame = await _gameService.Update(game, user);
+            return Ok(updatedGame);
         }
 
         [HttpPost("{id}/player")]

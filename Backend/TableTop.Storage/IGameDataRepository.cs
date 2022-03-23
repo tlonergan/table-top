@@ -13,5 +13,6 @@ namespace TableTop.Storage
         Task SaveMapToken(MapToken mapToken, User user);
         Task DeleteMapToken(MapToken mapToken, User user);
         Task AddPlayer(string gameId, User player, User gameOwner);
+        Task<Game> Update(Game game, User user);
     }
 }

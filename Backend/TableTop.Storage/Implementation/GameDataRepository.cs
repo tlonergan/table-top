@@ -27,7 +27,9 @@ internal class GameDataRepository : IGameDataRepository
         string userId = user.Id;
 
         using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
-                                                                        .Where(g => g.Owner.Id == userId || g.Players[userId].IsDefined())
+                                                                        .Where(g => g.Owner.Id == userId
+                                                                                    || g.Players[userId]
+                                                                                        .IsDefined())
                                                                         .ToFeedIterator();
 
         foreach (DataEntities.Game dataGame in await feedIterator.ReadNextAsync())
@@ -43,7 +45,10 @@ internal class GameDataRepository : IGameDataRepository
     {
         string userId = user.Id;
         using FeedIterator<DataEntities.Game>? feedIterator = _container.GetItemLinqQueryable<DataEntities.Game>()
-                                                                        .Where(g => g.Id == id && (g.Owner.Id == userId || g.Players[userId].IsDefined()))
+                                                                        .Where(g => g.Id == id
+                                                                                    && (g.Owner.Id == userId
+                                                                                        || g.Players[userId]
+                                                                                            .IsDefined()))
                                                                         .ToFeedIterator();
 
         foreach (DataEntities.Game? game in await feedIterator.ReadNextAsync())
@@ -81,9 +86,19 @@ internal class GameDataRepository : IGameDataRepository
         return savedGame.Map();
     }
 
+    public async Task<Game> Update(Game game, User user)
+    {
+        DataEntities.Game dataGame = DataEntities.Game.Map(game);
+
+        ItemResponse<DataEntities.Game>? replaceResponse = await _container.ReplaceItemAsync(dataGame, game.Id, new PartitionKey(user.Id));
+        DataEntities.Game? savedGame = replaceResponse.Resource;
+
+        return savedGame.Map();
+    }
+
     public async Task<Board> SaveBoard(string gameId, Board board, User user)
     {
-        if(board.Id == default)
+        if (board.Id == default)
             board.Id = Guid.NewGuid();
 
         List<PatchOperation> patchOperations = new List<PatchOperation>();
