@@ -8,15 +8,16 @@ body {
   font-size: 18px;
   font-family: Open Sans,Poppins,sans-serif;
   background: ghostwhite;
+  color: #161616;
 }
 
 a {
   cursor: pointer;
-  color: blue;
+  color: #C84B31;
 }
 
 a:hover {
-  color: grey;
+  color: #31c898;
 }
 
 select {
@@ -37,12 +38,12 @@ a.button {
   border-radius: 8px;
   height: 40px;
   background-color: rebeccapurple;
-  color: white;
+  color: whitesmoke;
 }
 
 button:hover {
   background-color: mediumpurple;
-  color: white;
+  color: whitesmoke;
 }
 
 button:disabled {
@@ -51,7 +52,7 @@ button:disabled {
 h2 a {
  cursor: pointer;
  text-decoration: underline;
- color: lightgrey;
+ color: grey;
 }
 
 h2 > a {
@@ -73,6 +74,7 @@ h2 > a {
   margin-bottom: 16px;
   border: 0;
   border-bottom: 8px;
+  border-color: #161616;
   border-style: solid;
   font-size: 1.25em;
   justify-content: space-between;
@@ -125,11 +127,18 @@ h2 > a {
 .menuItem a:hover {
 }
 
+.cardCarrier{
+  display: flex;
+  justify-content: center;
+}
+
 .card {
-  margin-bottom: 10px;
-  padding: 0;
-  border: solid;
-  border-radius: 7px;
+  margin: 0 8px 16px 8px;
+	padding: 0;
+	border: solid;
+	border-color: #161616;
+	border-radius: 7px;
+  width: 720px;
 }
 
 .card .cardHeader {
@@ -137,12 +146,46 @@ h2 > a {
   margin: 0;
   margin-bottom: 5px;
   font-weight: 400;
-  background: slateblue;
-  color: whitesmoke
+  background: #346751;
+  color: whitesmoke;
 }
 
 .card .cardHeader.contentCollapsed {
   margin-bottom: 0;
+}
+
+.card .cardBody {
+  text-align: left;
+  padding: 8px;
+}
+
+.card .cardButtons{
+  display: flex;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.card .cardButtons a {
+  width:50%;
+  background-color: #ECDBBA;
+  color: #161616;
+  padding: 8px 12px;
+  font-weight: bold;
+  border-radius: 0 0 5px 5px;
+  text-decoration: none;
+  height: 40px;
+  text-align: center;
+}
+
+.card .cardButtons a:first-child{
+  background-color: #C84B31;
+  color: whitesmoke;
+  border-radius: 0 0 0 5px;
+}
+
+.card .cardButtons a:only-child {
+  width: 100%;
+  border-radius: 0 0 5px 5px;
 }
 
 .dateRangeNavigator {

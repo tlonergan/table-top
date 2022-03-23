@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TableTop.Entities;
 using TableTop.Entities.Authorization;
+using TableTop.Entities.Extension;
 using TableTop.Entities.People;
 using TableTop.Service;
 
@@ -57,8 +58,20 @@ namespace TableTop.Controllers
 
             User user = new UserIdentity(userIdentity).User;
 
-            Board createdBoard = await _boardService.CreateBoard(gameId, board, user);
+            Board createdBoard = await _boardService.Create(gameId, board, user);
             return Ok(createdBoard);
+        }
+
+        [HttpPut("{gameId}/board")]
+        [Authorize(AuthorizationScopes.WriteBoards)]
+        public async Task<ActionResult<Board>> Put(string gameId, Board board)
+        {
+            var user = User.GetUser();
+            if (user == null)
+                return Forbid();
+
+            var savedBoard = await _boardService.Save(gameId, board, user);
+            return Ok(savedBoard);
         }
     }
 }

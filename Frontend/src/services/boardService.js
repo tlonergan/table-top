@@ -23,6 +23,26 @@ export const createBoard = async (getAccessTokenSilently, gameId) => {
     return await createBoardResponse.json();
 };
 
+export const updateBoard = async (getAccessTokenSilently, gameId, board) => {
+    const token = await getToken(getAccessTokenSilently, 'write:boards');
+    console.log("updateBoard", gameId, board);
+    const createBoardResponse = await fetch(
+        `${hostName}/game/${gameId}/board`,
+        {
+            method: 'PUT',
+            headers: getRequestHeaders(token),
+            body: JSON.stringify(board),
+        }
+    ).catch(console.error);
+
+    if(!createBoardResponse.ok){
+        console.error("Error Creating Board", createBoardResponse);
+        return;
+    }
+
+    return await createBoardResponse.json();
+}
+
 export const getBoards = async (getAccessTokenSilently, gameId) => {
     const token = await getToken(getAccessTokenSilently, 'read:boards');
 

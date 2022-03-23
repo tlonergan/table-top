@@ -13,7 +13,7 @@ internal class BoardService : IBoardService
         _gameDataRepository = gameDataRepository;
     }
 
-    public async Task<Board> CreateBoard(string gameId, Board board, User user)
+    public async Task<Board> Create(string gameId, Board board, User user)
     {
         if (string.IsNullOrWhiteSpace(board.Name))
             board.Name = "Unnamed";
@@ -23,7 +23,7 @@ internal class BoardService : IBoardService
         if (board.Width == default)
             board.Width = 25;
 
-        Board createdBoard = await _gameDataRepository.AddBoardToGame(gameId, board, user);
+        Board createdBoard = await _gameDataRepository.SaveBoard(gameId, board, user);
         return createdBoard;
     }
 
@@ -52,5 +52,26 @@ internal class BoardService : IBoardService
     public async Task DeleteMapToken(MapToken mapToken, User user)
     {
         await _gameDataRepository.DeleteMapToken(mapToken, user);
+    }
+
+    public async Task<Board> Save(string gameId, Board board, User user)
+    {
+        Game? game = await _gameDataRepository.Get(gameId, user);
+        if (game == null)
+            return board;
+
+        List<Board> activeGameBoards = game.Boards.Where(b => b.IsActive)
+                                           .ToList();
+        foreach (Board activeGameBoard in activeGameBoards)
+        {
+            if (activeGameBoard.Id == board.Id)
+                continue;
+
+            activeGameBoard.IsActive = false;
+            await _gameDataRepository.SaveBoard(gameId, activeGameBoard, user);
+        }
+
+        Board savedBoard = await _gameDataRepository.SaveBoard(gameId, board, user);
+        return savedBoard;
     }
 }

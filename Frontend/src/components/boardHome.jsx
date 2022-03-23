@@ -1,12 +1,11 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Link } from "react-router-dom";
 
 import { createBoard, getBoards } from '../services/boardService';
 import { gameBoardsAtom } from '../state/game';
 
 import Loading from './loading';
-import Card from './card';
 import { useAtom } from 'jotai';
+import BoardSummary from './boardSummary';
 
 const BoardHome = ({boards, gameId}) => {
     const { getAccessTokenSilently } = useAuth0();
@@ -18,11 +17,7 @@ const BoardHome = ({boards, gameId}) => {
 
         return (
             <>
-                {boards.map(board => (
-                    <Card key={board.id} name={board.name}>
-                        <Link to={`board/${board.id}`}>Go To Game Board</Link>
-                    </Card>
-                ))}
+                {gameBoards.map(gameBoard => (<BoardSummary key={gameBoard.id} board={gameBoard} gameId={gameId} />))}
             </>
         );
     };
@@ -38,7 +33,7 @@ const BoardHome = ({boards, gameId}) => {
     return (
         <>
             <h2>Boards <a onClick={createNewBoardClick}>Create New</a></h2>
-            <div>
+            <div className='cardCarrier'>
                 {getBoardContent()}
             </div>
         </>

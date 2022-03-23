@@ -81,12 +81,13 @@ internal class GameDataRepository : IGameDataRepository
         return savedGame.Map();
     }
 
-    public async Task<Board> AddBoardToGame(string gameId, Board board, User user)
+    public async Task<Board> SaveBoard(string gameId, Board board, User user)
     {
-        board.Id = Guid.NewGuid();
+        if(board.Id == default)
+            board.Id = Guid.NewGuid();
 
         List<PatchOperation> patchOperations = new List<PatchOperation>();
-        patchOperations.Add(PatchOperation.Add($"/boards/{board.Id}", DataEntities.Board.Map(board)));
+        patchOperations.Add(PatchOperation.Set($"/boards/{board.Id}", DataEntities.Board.Map(board)));
 
         await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(user.Id), patchOperations);
         return board;
@@ -119,7 +120,7 @@ internal class GameDataRepository : IGameDataRepository
     public async Task AddPlayer(string gameId, User player, User gameOwner)
     {
         List<PatchOperation> patchOperations = new List<PatchOperation>();
-        patchOperations.Add(PatchOperation.Add($"/players/{player.Id}", player));
+        patchOperations.Add(PatchOperation.Set($"/players/{player.Id}", player));
 
         await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(gameOwner.Id), patchOperations);
     }
