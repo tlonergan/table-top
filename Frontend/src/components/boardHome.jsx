@@ -1,15 +1,17 @@
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 
-import { createBoard, getBoards } from '../services/boardService';
-import { gameBoardsAtom } from '../state/game';
+import { createBoard } from '../services/boardService';
+import { gameBoards as gameBoardAtoms } from '../state/game';
 
 import Loading from './loading';
-import { useAtom } from 'jotai';
+import { atom, useAtom } from 'jotai';
 import BoardSummary from './boardSummary';
 
 const BoardHome = ({boards, gameId}) => {
+    console.log("BoardHome => Render", boards, gameId);
+
     const { getAccessTokenSilently } = useAuth0();
-    const [gameBoards, setGameBoards] = useAtom(gameBoardsAtom);
+    const [gameBoards, setGameBoards] = useAtom(gameBoardAtoms);
 
     const getBoardContent = () => {
         if(!boards || boards.length === 0)
@@ -17,7 +19,7 @@ const BoardHome = ({boards, gameId}) => {
 
         return (
             <>
-                {gameBoards.map(gameBoard => (<BoardSummary key={gameBoard.id} board={gameBoard} gameId={gameId} />))}
+                {gameBoards.map(gameBoard => (<BoardSummary key={gameBoard} state={gameBoard} gameId={gameId} />))}
             </>
         );
     };
@@ -26,7 +28,7 @@ const BoardHome = ({boards, gameId}) => {
         createBoard(getAccessTokenSilently, gameId)
         .then((createdBoard) => {
             console.log("BoardHome => createNewBoardClick => createBoard Then => ", createBoard);
-            setGameBoards([...gameBoards, createdBoard]);
+            setGameBoards([...gameBoards, atom(createdBoard)]);
         });
     };
 

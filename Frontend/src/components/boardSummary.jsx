@@ -7,50 +7,48 @@ import { updateGameBoardAtom } from "../state/game";
 import { updateBoard } from "../services/boardService";
 import Card from './card';
 
-const BoardSummary = ({board, gameId}) => {
+const BoardSummary = ({state, gameId}) => {
+    console.log("BoardSummary => Render", state, gameId);
+
     const navigate = useNavigate();
     const { getAccessTokenSilently } = useAuth0();
 
+    const [board, setBoard] = useAtom(state);
     const [cardButtons, setCardButtons] = useState([]);
-    // const [thisBoard, setThisBoard] = useState(board);
-    const thisBoard = board;
 
     const [, updateStateBoard] = useAtom(updateGameBoardAtom);
 
     useEffect(() => {
-        console.log("BoardSummary => useEffect[thisBoard]", thisBoard)
-        let buttons = [{display: 'Go To Board', onClick: () => goToBoardClicked(thisBoard.id)}];
-        if(!thisBoard.isActive)
+        let buttons = [{display: 'Go To Board', onClick: goToBoardClicked}];
+        if(!board.isActive)
             buttons.push({display: 'Make Active', onClick: makeActiveClicked});
 
         setCardButtons(buttons);
-    }, [thisBoard]);
+    }, [board]);
 
-    const goToBoardClicked = (boardId) => {
-        navigate(`board/${boardId}`);
+    const goToBoardClicked = () => {
+        navigate(`board/${board.id}`);
     };
 
     const makeActiveClicked = () => {
-        console.log("BoardSummary => Make Active Clicked", thisBoard);
+        console.log("BoardSummary => Make Active Clicked", board);
 
-        thisBoard.isActive = true;
-        updateBoard(getAccessTokenSilently, gameId, thisBoard)
+        board.isActive = true;
+        updateBoard(getAccessTokenSilently, gameId, board)
         .then((savedBoard) => {
-            console.log("BoardSummary => Make Active Clicked => updateBoard then", savedBoard);
-            // setThisBoard(savedBoard);
-            updateStateBoard(savedBoard);
+            setBoard(savedBoard);
         });
     };
 
     return (
-        <Card name={thisBoard.isActive ? `${thisBoard.name} (Active)`: thisBoard.name} buttons={cardButtons}>
+        <Card name={board.isActive ? `${board.name} (Active)`: board.name} buttons={cardButtons}>
             <div>
                 <label>Width: </label>
-                <span>{thisBoard.width}</span>
+                <span>{board.width}</span>
             </div>
             <div>
                 <label>Height: </label>
-                <span>{thisBoard.height}</span>
+                <span>{board.height}</span>
             </div>
         </Card>
     );
