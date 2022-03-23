@@ -88,12 +88,14 @@ internal class GameDataRepository : IGameDataRepository
 
     public async Task<Game> Update(Game game, User user)
     {
-        DataEntities.Game dataGame = DataEntities.Game.Map(game);
+        string gameName = game.Name;
+        if (string.IsNullOrWhiteSpace(gameName))
+            game.Name = gameName = "Unnamed";
 
-        ItemResponse<DataEntities.Game>? replaceResponse = await _container.ReplaceItemAsync(dataGame, game.Id, new PartitionKey(user.Id));
-        DataEntities.Game? savedGame = replaceResponse.Resource;
+        List<PatchOperation> patchOperations = new() { PatchOperation.Set($"/name", gameName) };
 
-        return savedGame.Map();
+        await _container.PatchItemAsync<DataEntities.Game>(game.Id, new PartitionKey(user.Id), patchOperations);
+        return game;
     }
 
     public async Task<Board> SaveBoard(string gameId, Board board, User user)
@@ -101,8 +103,7 @@ internal class GameDataRepository : IGameDataRepository
         if (board.Id == default)
             board.Id = Guid.NewGuid();
 
-        List<PatchOperation> patchOperations = new List<PatchOperation>();
-        patchOperations.Add(PatchOperation.Set($"/boards/{board.Id}", DataEntities.Board.Map(board)));
+        List<PatchOperation> patchOperations = new() { PatchOperation.Set($"/boards/{board.Id}", DataEntities.Board.Map(board)) };
 
         await _container.PatchItemAsync<DataEntities.Game>(gameId, new PartitionKey(user.Id), patchOperations);
         return board;

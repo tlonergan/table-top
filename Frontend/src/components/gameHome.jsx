@@ -3,12 +3,12 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useAtom } from "jotai";
 import { useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencil } from '@fortawesome/free-solid-svg-icons';
+import { faPencil, faXmark, faFloppyDisk } from '@fortawesome/free-solid-svg-icons';
 
 import Loading from "./loading";
 import BoardHome from "./boardHome";
 
-import { getGame } from "../services/gameService";
+import { getGame, updateGame } from "../services/gameService";
 import { getActiveGameAtom } from "../state/game";
 
 const GameHome = () => {
@@ -19,6 +19,7 @@ const GameHome = () => {
     const { gameId } = useParams();
     const { getAccessTokenSilently } = useAuth0();
     const [ isLoaded, setIsLoaded ] = useState(false);
+    const [ isEditMode, setIsEditMode ] = useState(false);
     const [ activeGame, setActiveGame ] = useAtom(activeGameAtom);
 
     useEffect(() => {
@@ -50,11 +51,49 @@ const GameHome = () => {
         );
     }
 
+    const onChange = (e) => {
+        const target = e.target;
+
+        const updatableGame = {...activeGame};
+        updatableGame[target.name] = target.value;
+
+        setActiveGame(updatableGame);
+    };
+
+    const saveGame = () => {
+        updateGame(getAccessTokenSilently, activeGame);
+        setIsEditMode(false);
+    };
+
+    const getTitleBlock = () => {
+        if(!isEditMode){
+            return (
+                <>
+                    <span>{activeGame.name}</span>
+                    <a onClick={() => setIsEditMode(true)}>
+                        <FontAwesomeIcon icon={faPencil} />
+                    </a>
+                </>
+            );
+        }
+        
+        return (
+            <>
+                <input type="text" name="name" value={activeGame.name} onChange={onChange} />
+                <a onClick={saveGame}>
+                    <FontAwesomeIcon icon={faFloppyDisk} />
+                </a>
+                <a onClick={() => setIsEditMode(false)}>
+                    <FontAwesomeIcon icon={faXmark} />
+                </a>
+            </>
+        );
+    };
+
     return (
         <>
             <h1>
-                <span>{activeGame.name}</span>
-                <a><FontAwesomeIcon icon={faPencil} /></a>
+                {getTitleBlock()}
             </h1>
             <p>Welcome to the home of your game.</p>
             <div>
