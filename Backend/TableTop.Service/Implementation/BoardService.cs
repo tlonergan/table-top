@@ -56,22 +56,29 @@ internal class BoardService : IBoardService
 
     public async Task<Board> Save(string gameId, Board board, User user)
     {
+        await EnsureSingleActiveBoard(board, gameId, user);
+        Board savedBoard = await _gameDataRepository.SaveBoard(gameId, board, user);
+        return savedBoard;
+    }
+
+    private async Task EnsureSingleActiveBoard(Board boardSaving, string gameId, User user)
+    {
+        if (!boardSaving.IsActive)
+            return;
+
         Game? game = await _gameDataRepository.Get(gameId, user);
         if (game == null)
-            return board;
+            return;
 
         List<Board> activeGameBoards = game.Boards.Where(b => b.IsActive)
                                            .ToList();
         foreach (Board activeGameBoard in activeGameBoards)
         {
-            if (activeGameBoard.Id == board.Id)
+            if (activeGameBoard.Id == boardSaving.Id)
                 continue;
 
             activeGameBoard.IsActive = false;
             await _gameDataRepository.SaveBoard(gameId, activeGameBoard, user);
         }
-
-        Board savedBoard = await _gameDataRepository.SaveBoard(gameId, board, user);
-        return savedBoard;
     }
 }

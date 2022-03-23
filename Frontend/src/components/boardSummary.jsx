@@ -8,8 +8,10 @@ import { faPencil } from '@fortawesome/free-solid-svg-icons';
 import { updateGameBoardAtom } from "../state/game";
 import { updateBoard } from "../services/boardService";
 import Card from './card';
+import BoardEdit from "./boardEdit";
 
 const BoardSummary = ({state, gameId}) => {
+    console.log("BoardSummary => Render", state, gameId);
     const navigate = useNavigate();
     const { getAccessTokenSilently } = useAuth0();
 
@@ -43,33 +45,27 @@ const BoardSummary = ({state, gameId}) => {
         setIsEditMode(true);
     };
 
-    const saveClicked = () => {
+    const onEditComplete = (isCancelled) => {
+        console.log("BoardSummary => onEditComplete", board);        
+        
+        if(!isCancelled){
+            updateBoard(getAccessTokenSilently, gameId, board)
+            .then((savedBoard) => {
+                setBoard(savedBoard);
+            }); 
+        }
         setIsEditMode(false);
     };
 
     if(isEditMode){
         return (
-            <Card name={`${board.name} ${board.isActive ? '(Active)' : ''} - Editing`} buttons={[{display: "Save", onClick: saveClicked}]}>
-                <div className="form">
-                    <div>
-                        <label>Name</label>
-                        <input type="text" value={board.name} />
-                    </div>
-                    <div>
-                        <label>Width </label>
-                        <input type="text" value={board.width} />
-                    </div>
-                    <div>
-                        <label>Height </label>
-                        <input type="text" value={board.height} />
-                    </div>
-                </div>
-            </Card>);
+            <BoardEdit state={state} onEditComplete={onEditComplete} />
+        );
     }
 
     return (
         <Card name={`${board.name} ${board.isActive ? '(Active)' : ''}`} buttons={cardButtons}>
-            <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row-reverse"}}>
+            <div style={{display: "flex", justifyContent: "space-between", flexDirection: "row-reverse", alignItems: "flex-start"}}>
                 <div>
                     <a onClick={editClicked}><FontAwesomeIcon icon={faPencil} /></a>
                 </div>

@@ -224,10 +224,6 @@ h2 > a {
   margin: 32px 128px;
 }
 
-.form {
-  padding-left: 32px;
-}
-
 .form div:not(.formField){
   margin-bottom: 4px;
 }
