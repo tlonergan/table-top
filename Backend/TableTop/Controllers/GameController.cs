@@ -25,11 +25,9 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<List<Game>>> GetAll()
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            User user = new UserIdentity(userIdentity).User;
 
             List<Game> games = await _gameService.GetAll(user);
             return Ok(games);
@@ -39,11 +37,9 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.WriteGames)]
         public async Task<ActionResult<Game>> Post(Game game)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            game.Owner = new UserIdentity(userIdentity).User;
 
             Game createdGame = await _gameService.Create(game);
             return Ok(createdGame);
@@ -53,11 +49,9 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<Game>> Get(string id)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            User user = new UserIdentity(userIdentity).User;
 
             Game? game = await _gameService.Get(id, user);
             if (game == null)
@@ -82,11 +76,9 @@ namespace TableTop.Controllers
         [Authorize]
         public async Task<ActionResult> AddPlayer(string id)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            User user = new UserIdentity(userIdentity).User;
 
             await _gameService.AddPlayer(id, user);
             return Ok();
