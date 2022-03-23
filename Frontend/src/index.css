@@ -145,7 +145,8 @@ h2 a {
 	padding: 0;
 	border: solid;
 	border-color: #161616;
-	border-radius: 7px;
+	border-radius: 8px;
+  border-width: 2px;
   width: 720px;
 }
 

@@ -33,8 +33,8 @@ const BoardHome = ({boards, gameId}) => {
     };
 
     return (
-        <div style={{textAlign: 'left',border: "solid", borderWidth: '2px', borderColor: '#161616', borderRadius: '7px'}}>
-            <div style={{marginBottom: '16px', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignContent: 'center', background: '#346751', color: 'whitesmoke'}}>
+        <div style={{textAlign: 'left',border: "solid", borderWidth: '2px', borderColor: '#161616', borderRadius: '8px'}}>
+            <div style={{marginBottom: '16px', padding: '8px 16px', display: 'flex', justifyContent: 'space-between', alignContent: 'center', background: '#346751', color: 'whitesmoke', borderBottom: 'solid 2px #161616'}}>
                 <h2 style={{padding: '0', margin: '0'}}>
                     <span>Boards</span>
                 </h2>
