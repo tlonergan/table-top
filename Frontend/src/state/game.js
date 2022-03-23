@@ -18,8 +18,18 @@ export const updateGameBoardAtom = atom(
     null,
     (get, set, updatedBoard) => {
         const game = get(activeGame);
-        const otherBoards = game.boards.filter(b => b.id !== updatedBoard.id);
-        console.log("Update Game Board Atom => set", game, otherBoards, updatedBoard);
-        set(activeGame, {...game, boards: [...otherBoards, updatedBoard]});
+        const boards = game.boards;
+        const existingBoard = boards.find(b => b.id === updatedBoard.id);
+        
+        let boardsToSet = [...boards];
+        if(existingBoard){
+            const index = boards.indexOf(existingBoard);
+            boards.splice(index, 1, boardsToSet);
+        } else {
+            const otherBoards = game.boards.filter(b => b.id !== updatedBoard.id);
+            boardsToSet = [...otherBoards, updatedBoard];
+        }
+
+        set(activeGame, {...game, boards: boardsToSet});
     }
 );
