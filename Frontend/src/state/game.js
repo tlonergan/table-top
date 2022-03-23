@@ -13,3 +13,13 @@ export const gameBoardsAtom = atom(
         set(activeGame, {...previousGame, boards: updatedBoards});
     }
 );
+
+export const updateGameBoardAtom = atom(
+    null,
+    (get, set, updatedBoard) => {
+        const game = get(activeGame);
+        const otherBoards = game.boards.filter(b => b.id !== updatedBoard.id);
+        console.log("Update Game Board Atom => set", game, otherBoards, updatedBoard);
+        set(activeGame, {...game, boards: [...otherBoards, updatedBoard]});
+    }
+);

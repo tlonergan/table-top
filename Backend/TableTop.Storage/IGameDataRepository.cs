@@ -9,7 +9,7 @@ namespace TableTop.Storage
         Task<Game?> Get(string gameId);
         Task<List<Game>> GetAll(User user);
         Task<Game> Create(Game game);
-        Task<Board> AddBoardToGame(string gameId, Board board, User user);
+        Task<Board> SaveBoard(string gameId, Board board, User user);
         Task SaveMapToken(MapToken mapToken, User user);
         Task DeleteMapToken(MapToken mapToken, User user);
         Task AddPlayer(string gameId, User player, User gameOwner);

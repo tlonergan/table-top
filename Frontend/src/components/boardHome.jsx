@@ -17,7 +17,7 @@ const BoardHome = ({boards, gameId}) => {
 
         return (
             <>
-                {gameBoards.map(board => (<BoardSummary key={board.id} board={board} />))}
+                {gameBoards.map(gameBoard => (<BoardSummary key={gameBoard.id} board={gameBoard} gameId={gameId} />))}
             </>
         );
     };

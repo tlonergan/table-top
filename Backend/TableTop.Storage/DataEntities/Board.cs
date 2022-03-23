@@ -11,6 +11,7 @@ internal class Board : AuditableEntity
 
     public Guid Id { get; set; }
     public string Name { get; set; }
+    public bool IsActive { get; set; }
     public Dictionary<Guid, MapToken> MapTokens { get; set; }
     public int Height { get; set; }
     public int Width { get; set; }
@@ -24,6 +25,7 @@ internal class Board : AuditableEntity
             MapTokens = source.MapTokens.ToDictionary(mt => mt.MapTokenId, MapToken.Map),
             Name = source.Name,
             Width = source.Width,
+            IsActive = source.IsActive,
         };
     }
 
@@ -36,7 +38,8 @@ internal class Board : AuditableEntity
             Height = Height,
             Id = Id,
             MapTokens = MapTokens.Select(mt => mt.Value.Map())
-                                 .ToList()
+                                 .ToList(),
+            IsActive = IsActive,
         };
     }
 }
