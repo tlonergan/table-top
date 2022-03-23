@@ -2,14 +2,26 @@ import { atom } from "jotai";
 
 const activeGame = atom(null);
 
+const mapGameBoards = (set, boards) => {
+    const gameBoardAtoms = boards.map(b => atom(b));
+    set(gameBoards, gameBoardAtoms);
+};
+
+export const gameBoards = atom([]);
+
 export const getActiveGameAtom = () => {
-    return activeGame;
+    return atom(get => get(activeGame),
+        (_get, set, updatedGame) => {
+            set(activeGame, updatedGame);
+            mapGameBoards(set, updatedGame.boards);
+        });
 };
 
 export const gameBoardsAtom = atom(
     (get) => get(activeGame).boards,
     (get, set, updatedBoards) => {
         const previousGame = get(activeGame);
+        mapGameBoards(set, updatedBoards);
         set(activeGame, {...previousGame, boards: updatedBoards});
     }
 );

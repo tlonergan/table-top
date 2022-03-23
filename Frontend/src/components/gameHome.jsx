@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { useAtom } from "jotai";
 import { useParams } from 'react-router-dom';
@@ -10,10 +10,14 @@ import { getGame } from "../services/gameService";
 import { getActiveGameAtom } from "../state/game";
 
 const GameHome = () => {
+    console.log("GameHome => render");
+
+    const activeGameAtom = useMemo(() => getActiveGameAtom(), []);
+
     const { gameId } = useParams();
     const { getAccessTokenSilently } = useAuth0();
     const [ isLoaded, setIsLoaded ] = useState(false);
-    const [ activeGame, setActiveGame ] = useAtom(getActiveGameAtom());
+    const [ activeGame, setActiveGame ] = useAtom(activeGameAtom);
 
     useEffect(() => {
         getGame(getAccessTokenSilently, gameId)
