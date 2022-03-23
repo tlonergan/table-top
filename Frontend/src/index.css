@@ -224,8 +224,16 @@ h2 > a {
   margin: 32px 128px;
 }
 
-.form {
-  padding-left: 32px;
+.form div:not(.formField){
+  margin-bottom: 4px;
+}
+
+.form div:not(.formField) > label {
+  width: 32px;
+}
+
+.form div:not(.formField) > input {
+  margin-left: 8px;
 }
 
 .formField {
