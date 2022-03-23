@@ -77,6 +77,31 @@ export const createGame = async (game, getAccessTokenSilently) => {
     return await createGameResponse.json();
 }
 
+export const updateGame = async (getAccessTokenSilently, game) => {
+    if(!game){
+        console.error("Game was not set", game);
+        return;
+    }
+
+    const token = await getToken(getAccessTokenSilently, 'write:games');
+
+    const createGameResponse = await fetch(
+        `${hostName}game/${game.id}`,
+        {
+            method: 'PUT',
+            headers: getRequestHeaders(token),
+            body: JSON.stringify(game)
+        },
+        console.error)
+    .catch(console.error);
+
+    if(!createGameResponse.ok){
+        console.error("Request to create game failed", createGameResponse);
+        return;
+    }
+
+    return await createGameResponse.json();}
+
 export const addPlayer = async (getAccessTokenSilently, gameId) => {
     const token = await getToken(getAccessTokenSilently, 'write:games');
     

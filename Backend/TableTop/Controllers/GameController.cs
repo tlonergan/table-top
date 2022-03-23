@@ -1,8 +1,8 @@
-﻿using System.Security.Principal;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TableTop.Entities;
 using TableTop.Entities.Authorization;
+using TableTop.Entities.Extension;
 using TableTop.Entities.People;
 using TableTop.Service;
 
@@ -20,15 +20,25 @@ namespace TableTop.Controllers
             _gameService = gameService;
         }
 
+        [HttpGet]
+        [Authorize(AuthorizationScopes.ReadGames)]
+        public async Task<ActionResult<List<Game>>> GetAll()
+        {
+            User? user = User.GetUser();
+            if (user == null)
+                return Forbid();
+
+            List<Game> games = await _gameService.GetAll(user);
+            return Ok(games);
+        }
+
         [HttpPost]
         [Authorize(AuthorizationScopes.WriteGames)]
         public async Task<ActionResult<Game>> Post(Game game)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            game.Owner = new UserIdentity(userIdentity).User;
 
             Game createdGame = await _gameService.Create(game);
             return Ok(createdGame);
@@ -38,11 +48,9 @@ namespace TableTop.Controllers
         [Authorize(AuthorizationScopes.ReadGames)]
         public async Task<ActionResult<Game>> Get(string id)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            User user = new UserIdentity(userIdentity).User;
 
             Game? game = await _gameService.Get(id, user);
             if (game == null)
@@ -51,29 +59,25 @@ namespace TableTop.Controllers
             return Ok(game);
         }
 
-        [HttpGet]
-        [Authorize(AuthorizationScopes.ReadGames)]
-        public async Task<ActionResult<List<Game>>> GetAll()
+        [HttpPut("{id}")]
+        [Authorize(AuthorizationScopes.WriteGames)]
+        public async Task<ActionResult<Game>> Put(string id, Game game)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
 
-            User user = new UserIdentity(userIdentity).User;
-
-            List<Game> games = await _gameService.GetAll(user);
-            return Ok(games);
+            Game updatedGame = await _gameService.Update(game, user);
+            return Ok(updatedGame);
         }
 
         [HttpPost("{id}/player")]
         [Authorize]
         public async Task<ActionResult> AddPlayer(string id)
         {
-            IIdentity? userIdentity = User.Identity;
-            if (userIdentity == null)
+            User? user = User.GetUser();
+            if (user == null)
                 return Forbid();
-
-            User user = new UserIdentity(userIdentity).User;
 
             await _gameService.AddPlayer(id, user);
             return Ok();
