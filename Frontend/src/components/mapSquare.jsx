@@ -1,18 +1,16 @@
 import { useEffect, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
-import {  useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 
 import DraggableItemTypes from '../entities/draggableTypes';
 import { createMapToken, mapTokens as mapTokensAtom, addMapTokenAtom } from '../state/board';
 import { eventKeys } from '../state/hubConnections';
-import { tokensAtom } from '../state/token';
+import { tokensAtom, unknownTokenAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
-const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
-    console.log("MapSquare Render");
-    
+const MapSquare = ({state, movementConnection, contents}) => {    
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
     const [,addMapToken] = useAtom(addMapTokenAtom);
@@ -20,25 +18,35 @@ const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
         get => get(mapTokensAtom)
     ));
     
+    console.log("MapSquare => Render", square);
+    
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
-        
-        const initialContents = [];
-        contents.forEach(content => {
-            const token = tokens.find(t=> t.tokenId === content.tokenId);
-
-            console.log("existing token atom", token, content.tokenId, tokens);
-            const mapTokenAtom = createMapToken(square.squarePosition, token.atom, content.mapTokenId);
-            initialContents.push(mapTokenAtom)
-            addMapToken(mapTokenAtom);
-        });
-
-        setSquare({... square, contents: [...square.contents, ...initialContents]});
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
         };
     }, []);
+
+    useEffect(() => {
+        console.log("MapSquare => useEffect[tokens]", tokens);
+
+        const initialContents = [];
+        contents.forEach(content => {
+            let tokenAtom = unknownTokenAtom;
+
+            const token = tokens.find(t=> t.tokenId === content.tokenId);
+            if(token)
+                tokenAtom = token.atom;
+
+            console.log("MapSquare => useEffect => contents foreach", token, content.tokenId, tokens);
+            const mapTokenAtom = createMapToken(square.squarePosition, tokenAtom, content.mapTokenId);
+            initialContents.push(mapTokenAtom)
+            addMapToken(mapTokenAtom);
+        });
+
+        setSquare({... square, contents: [...square.contents, ...initialContents]});
+    }, [tokens]);
 
 
     const [,thisMapSquare] = useDrop(() => ({
@@ -62,7 +70,7 @@ const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
                 if(!token)
                     return;
 
-                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {position: square.position, mapTokenId: mapToken.mapTokenId, tokenId: token.tokenId, game: { id: gameId}, boardId});
+                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {position: square.position, mapTokenId: mapToken.mapTokenId, tokenId: token.tokenId, game: { id: square.gameId}, boardId: square.boardId});
             });
         },
     }));

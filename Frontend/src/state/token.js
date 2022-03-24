@@ -1,8 +1,16 @@
 import { atom } from 'jotai';
+import Sizes from '../entities/sizes';
 
 const selectedMapToken = atom(null);
 
 export const allTokenAtoms = atom([]);
+
+export const unknownTokenAtom = atom({
+    tokenId: '00000000-0000-0000-0000-000000000000',
+    imageSource: '',
+    name: "Unknown",
+    size: Sizes.MEDIUM
+});
 
 export const tokensAtom = atom(
     get => {

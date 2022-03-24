@@ -7,8 +7,8 @@ body {
   padding: 0;
   font-size: 18px;
   font-family: Open Sans,Poppins,sans-serif;
-  background: ghostwhite;
   color: #161616;
+  background-color: whitesmoke;
 }
 
 a {
@@ -243,6 +243,11 @@ h2 a {
   margin: 32px 128px;
 }
 
+.pageContainer::before {
+  margin: 0;
+  background-color: grey;
+}
+
 .form div:not(.formField){
   margin-bottom: 4px;
 }
@@ -270,16 +275,77 @@ h2 a {
   padding: 0;
 }
 
+.slideContainer {
+  display: flex;
+  justify-content: left;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  background-color: whitesmoke;
+  border: solid 1px #161616;
+}
+
+.slideContainer .tab {
+  background-color: #C84B31;
+  border: solid 2px grey;
+  border-top-left-radius: 8px;
+  border-bottom: 0;
+  color: whitesmoke;
+  margin-top: 36px;
+  padding: 4px 8px;
+  min-width: 80px;
+  height: 33px;
+  cursor: pointer;
+}
+
+.slideContainer .tab.currentTab {
+  background-color: #346751;
+  border-radius: 0;
+  border: 0;
+}
+
+.slideContainer .tab.currentTab:hover {
+  background-color: #346751;
+}
+
+.slideContainer .tab:hover {
+  background-color: #31c898;
+  border-color: #31c898;
+}
+
+.slideContainer .tab:not(:first-child){
+  left: 200px;
+}
+
+/* .slideContainer .tab::before { 
+  z-index: -1;
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: inherit;
+  -webkit-transform: skewX(-10deg);
+  -moz-transform: skewX(-10deg);
+  -ms-transform: skewX(-10deg);
+  transform: skewX(-10deg);
+} */
+
 .toolbox {
   padding-left: 64px;
 }
 
 .board {
   width: 100%;
-  padding: 64px;
+  max-width: 2200px;
+  max-height: 1000px;
+  margin: 64px 0;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-content: center;
+  overflow: auto;
+  z-index: 4;
 }
 
 .boardColumn {
@@ -291,6 +357,7 @@ h2 a {
   width: 80px;
   border: .5px solid grey;
   padding: .5px;
+  z-index: 5;
 }
 
 .mapSquareSelected {
@@ -303,16 +370,18 @@ h2 a {
   background-color: darkgray;
   height: 76px;
   width: 76px;
+  z-index: 10;
 }
 
 .token > img{
   height: 75px;
   width: 75px;
+  z-index: 15;
 }
 
 .mapToken {
-
   border: 1px solid transparent;
+  z-index: 9;
 }
 
 .mapToken.selected {
