@@ -10,5 +10,5 @@ public interface IBoardService
     Task<Board?> Get(string gameId, Guid boardId, User user);
     Task SaveMapToken(MapToken mapToken, User user);
     Task DeleteMapToken(MapToken mapToken, User user);
-    Task<Board> Save(string gameId, Board board, User user);
+    Task<Board?> Save(string gameId, Board board, User user);
 }

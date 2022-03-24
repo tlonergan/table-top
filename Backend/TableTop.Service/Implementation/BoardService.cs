@@ -54,8 +54,19 @@ internal class BoardService : IBoardService
         await _gameDataRepository.DeleteMapToken(mapToken, user);
     }
 
-    public async Task<Board> Save(string gameId, Board board, User user)
+    public async Task<Board?> Save(string gameId, Board board, User user)
     {
+        bool isValid = board.Width is > 8 and < 500 && board.Height is > 8 and < 500;
+        if (!isValid)
+        {
+            Game? game = await _gameDataRepository.Get(gameId, user);
+            if (game == null)
+                return null;
+
+            Board? originalBoard = game.Boards.FirstOrDefault(b => b.Id == board.Id);
+            return originalBoard;
+        }
+
         await EnsureSingleActiveBoard(board, gameId, user);
         Board savedBoard = await _gameDataRepository.SaveBoard(gameId, board, user);
         return savedBoard;
