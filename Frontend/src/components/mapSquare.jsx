@@ -1,12 +1,12 @@
 import { useEffect, useCallback } from 'react';
 import { useDrop } from 'react-dnd';
-import {  useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import { useAtomCallback } from 'jotai/utils';
 
 import DraggableItemTypes from '../entities/draggableTypes';
 import { createMapToken, mapTokens as mapTokensAtom, addMapTokenAtom } from '../state/board';
 import { eventKeys } from '../state/hubConnections';
-import { tokensAtom } from '../state/token';
+import { tokensAtom, unknownTokenAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
@@ -17,29 +17,36 @@ const MapSquare = ({state, movementConnection, contents}) => {
     const getMapTokens = useAtomCallback(useCallback(
         get => get(mapTokensAtom)
     ));
-
     
     console.log("MapSquare => Render", square);
     
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
-        
-        const initialContents = [];
-        contents.forEach(content => {
-            const token = tokens.find(t=> t.tokenId === content.tokenId);
-
-            console.log("existing token atom", token, content.tokenId, tokens);
-            const mapTokenAtom = createMapToken(square.squarePosition, token.atom, content.mapTokenId);
-            initialContents.push(mapTokenAtom)
-            addMapToken(mapTokenAtom);
-        });
-
-        setSquare({... square, contents: [...square.contents, ...initialContents]});
 
         return () => {
             movementConnection.off(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
         };
     }, []);
+
+    useEffect(() => {
+        console.log("MapSquare => useEffect[tokens]", tokens);
+
+        const initialContents = [];
+        contents.forEach(content => {
+            let tokenAtom = unknownTokenAtom;
+
+            const token = tokens.find(t=> t.tokenId === content.tokenId);
+            if(token)
+                tokenAtom = token.atom;
+
+            console.log("MapSquare => useEffect => contents foreach", token, content.tokenId, tokens);
+            const mapTokenAtom = createMapToken(square.squarePosition, tokenAtom, content.mapTokenId);
+            initialContents.push(mapTokenAtom)
+            addMapToken(mapTokenAtom);
+        });
+
+        setSquare({... square, contents: [...square.contents, ...initialContents]});
+    }, [tokens]);
 
 
     const [,thisMapSquare] = useDrop(() => ({

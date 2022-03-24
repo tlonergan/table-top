@@ -7,8 +7,8 @@ body {
   padding: 0;
   font-size: 18px;
   font-family: Open Sans,Poppins,sans-serif;
-  background: ghostwhite;
   color: #161616;
+  background-color: whitesmoke;
 }
 
 a {
@@ -243,6 +243,11 @@ h2 a {
   margin: 32px 128px;
 }
 
+.pageContainer::before {
+  margin: 0;
+  background-color: grey;
+}
+
 .form div:not(.formField){
   margin-bottom: 4px;
 }
@@ -269,6 +274,63 @@ h2 a {
   margin: 0;
   padding: 0;
 }
+
+.slideContainer {
+  display: flex;
+  justify-content: left;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  background-color: whitesmoke;
+  border: solid 1px #161616;
+}
+
+.slideContainer .tab {
+  background-color: #C84B31;
+  border: solid 2px grey;
+  border-top-left-radius: 8px;
+  border-bottom: 0;
+  color: whitesmoke;
+  margin-top: 36px;
+  padding: 4px 8px;
+  min-width: 80px;
+  min-height: 33px;
+  /* -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg); */
+}
+
+.slideContainer .tab.currentTab {
+  background-color: #346751;
+}
+
+.slideContainer .tab.currentTab:hover {
+  background-color: #346751;
+}
+
+.slideContainer .tab:hover {
+  background-color: #31c898;
+  border-color: #31c898;
+}
+
+.slideContainer .tab:not(:first-child){
+  left: 200px;
+}
+
+/* .slideContainer .tab::before { 
+  z-index: -1;
+  content: "";
+  position: absolute;
+  left: -10%;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background-color: inherit;
+  -webkit-transform: skewX(-10deg);
+  -moz-transform: skewX(-10deg);
+  -ms-transform: skewX(-10deg);
+  transform: skewX(-10deg);
+} */
 
 .toolbox {
   padding-left: 64px;

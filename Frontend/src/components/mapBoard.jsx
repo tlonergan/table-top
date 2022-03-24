@@ -5,7 +5,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend';
 import { DndProvider } from 'react-dnd';
 import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
-import { removeSelectedMapToken } from '../state/token';
+import { allTokenAtoms, removeSelectedMapToken } from '../state/token';
 import { activeBoardAtom } from "../state/board";
 import { getBoardHubConnectection } from '../state/hubConnections';
 import { getBoard } from "../services/boardService";
@@ -14,6 +14,9 @@ import keyCodes from '../entities/keyCodes';
 import Loading from './loading';
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
+import SlidePanel from "./slideTab";
+import SlideContainer from "./slideContainer";
+import { getTokens } from "../api/tokenService";
 
 const MapBoard = () => {
     console.log("Board => Render");
@@ -23,14 +26,21 @@ const MapBoard = () => {
 
     const [, deleteMapToken] = useAtom(removeSelectedMapToken);
     const [ board, setBoard ] = useAtom(activeBoardAtom);
+    const [tokenAtoms, setTokenAtoms] = useAtom(allTokenAtoms);
     
     const [ movementConnection, setMovementConnection ] = useState(null);
-    const [ boardDimensions, setBoardDimensions ] = useState({width: 0, height: 0});
     const [ rows, setRows ] = useState([]);
 
     const { getAccessTokenSilently } = useAuth0();
 
     useEffect(() => {
+        let newTokenAttoms = getTokens().map(token => {
+            const tokenAtom = atom(token);
+            return tokenAtom;
+        });
+
+        setTokenAtoms(newTokenAttoms);
+
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
         getBoardHubConnectection(getAccessTokenSilently).then(setMovementConnection);
         
@@ -45,31 +55,32 @@ const MapBoard = () => {
             setBoard(retreivedBoard);
         })
         .catch(boardNotFound);
+
+        return () => setBoard(null);
       }, []);
 
     useEffect(() => {
-        if(!board)
+        if(!movementConnection || !board)
             return;
-        if(board.width === boardDimensions.width && board.height === boardDimensions.height)
-            return;
-
-        setBoardDimensions({width: board.width, height: board.height});
-    }, [board]);
-
-    useEffect(() => {
-        if(!movementConnection)
-            return;
-
+        console.log("MapBoard => useEffect[movementConnection, board]", board);
         setUpBoard();
-    }, [boardDimensions, movementConnection]);
+    }, [movementConnection, board]);
+
+    const getExistingTokens = () => {        
+        let newTokenAttoms = getTokens().map(token => {
+            const tokenAtom = atom(token);
+            return tokenAtom;
+        });
+        setTokenAtoms([...newTokenAttoms]);
+    };
 
     const setUpBoard = () => {
         const squares = [];
 
-        const squaresHigh = boardDimensions.height;
-        const squaresWide = boardDimensions.width;
+        const squaresHigh = board.height;
+        const squaresWide = board.width;
 
-        console.log("Creating all Squares on board");
+        console.log("Creating all Squares on board", squaresWide, squaresHigh);
         const totalNumberOfSquares = squaresHigh * squaresWide;
         let currentY = 0;
         let currentX = 0;
@@ -99,14 +110,22 @@ const MapBoard = () => {
         deleteMapToken(null);
     }
 
-    return (
-        <DndProvider backend={HTML5Backend}>
-            <div className="toolbox">
-                <TokenBox/>
-            </div>
-            <div className="board" style={{width: `${boardDimensions.width * 80}px`, height: `${boardDimensions.height * 80}px`}}>
+    const getBoardBlock = () => {
+        if(!board)
+            return <Loading />;
+
+        return (
+            <div className="board" style={{width: `${board.width * 80}px`, height: `${board.height * 80}px`}}>
                 {rows.map(r => r)}
             </div>
+        );
+    };
+
+    return (
+        <DndProvider backend={HTML5Backend}>
+            <SlideContainer panels={[{name: 'Tokens', panel: <TokenBox />}, {name: 'Other Toolbox', panel: <Loading/>}]}>
+                {getBoardBlock()}
+            </SlideContainer>
         </DndProvider>);
 };
 

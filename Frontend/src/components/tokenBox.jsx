@@ -1,20 +1,10 @@
-import { useEffect } from 'react';
-import { atom, useAtom } from 'jotai';
+import { useAtom } from 'jotai';
 import Token from "./token"
-import { getTokens } from '../api/tokenService';
 import { allTokenAtoms } from '../state/token';
 
 const TokenBox = () => {
-    const [tokenAtoms, setTokenAtoms] = useAtom(allTokenAtoms);
+    const [tokenAtoms] = useAtom(allTokenAtoms);
 
-    useEffect(() => {
-            let newTokenAttoms = getTokens().map(token => {
-                const tokenAtom = atom(token);
-                return tokenAtom;
-            });
-            setTokenAtoms([...newTokenAttoms]);
-        }, []);
-        
     return (
         <div className="tokenToolbox">
             {tokenAtoms.map(tokenAtom => {
