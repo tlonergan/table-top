@@ -6,8 +6,10 @@ export const getTokens = () => {
         name: "Young Copper Dragon",
         size: {
             name: 'Large',
-            height: 10,
-            width: 10,
+            gameHeight: 10,
+            gameWidth: 10,
+            height: 152,
+            width: 152,
         }
     };
     
@@ -17,8 +19,10 @@ export const getTokens = () => {
         name: "Tomb Guardian", 
         size: {
             name: 'Meduim',
-            height: 5,
-            width: 5,
+            gameHeight: 5,
+            gameWidth: 5,
+            height: 76,
+            width: 76,
         }
     };
 

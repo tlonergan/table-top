@@ -16,7 +16,7 @@ import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 
 const MapBoard = () => {
-    console.log("Re-render board");
+    console.log("Board => Render");
 
     const { gameId, boardId } = useParams();
     const navigate = useNavigate();
@@ -64,29 +64,32 @@ const MapBoard = () => {
     }, [boardDimensions, movementConnection]);
 
     const setUpBoard = () => {
-        let newRows = [];
-        let squareAtoms = [];
+        const squares = [];
 
         const squaresHigh = boardDimensions.height;
         const squaresWide = boardDimensions.width;
 
         console.log("Creating all Squares on board");
-        for (let i = 0; i < squaresHigh; i++) {
-            let columns = [];
-            for (let j = 0; j < squaresWide; j++) {
-                const boardSquareAtom = atom({position: {x: i, y: j}, contents: []});
-                boardSquareAtom.debugLabel = "square(" + i + ", " + j + ")";
+        const totalNumberOfSquares = squaresHigh * squaresWide;
+        let currentY = 0;
+        let currentX = 0;
 
-                const squareContents = board.mapTokens.filter(mapToken => mapToken.position.x === i && mapToken.position.y === j);
+        for(let i = 0; i < totalNumberOfSquares; i++){
+            const squareContents = board.mapTokens.filter(mapToken => mapToken.position.x === currentX && mapToken.position.y === currentY);
+            
+            const boardSquareAtom = atom({position: {x: currentX, y: currentY}, contents: [], boardId: boardId, gameId: gameId});
+            boardSquareAtom.debugLabel = `square(${currentX}, ${currentY})`;
 
-                squareAtoms.push(boardSquareAtom);
-                columns.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} gameId={gameId} boardId={boardId} contents={squareContents} />));
+            squares.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} contents={squareContents} />));
+
+            currentX++;
+            if(currentX >= squaresWide){
+                currentX = 0;
+                currentY++;
             }
-    
-            newRows.push((<div className="boardColumn" key={"row" + i}>{columns}</div>));
         }
 
-        setRows(newRows);
+        setRows(squares);
     };
 
     const onDeleteRemoveSelectedMapToken = (e) => {
@@ -101,7 +104,7 @@ const MapBoard = () => {
             <div className="toolbox">
                 <TokenBox/>
             </div>
-            <div className="board">
+            <div className="board" style={{width: `${boardDimensions.width * 80}px`, height: `${boardDimensions.height * 80}px`}}>
                 {rows.map(r => r)}
             </div>
         </DndProvider>);

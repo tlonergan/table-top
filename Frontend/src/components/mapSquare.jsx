@@ -10,15 +10,16 @@ import { tokensAtom } from '../state/token';
 
 import MapToken from './mapToken';
 
-const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
-    console.log("MapSquare Render");
-    
+const MapSquare = ({state, movementConnection, contents}) => {    
     const [square, setSquare] = useAtom(state);
     const [tokens] = useAtom(tokensAtom);
     const [,addMapToken] = useAtom(addMapTokenAtom);
     const getMapTokens = useAtomCallback(useCallback(
         get => get(mapTokensAtom)
     ));
+
+    
+    console.log("MapSquare => Render", square);
     
     useEffect(() => {
         movementConnection.on(eventKeys.movement.TOKEN_MOVED, onTokenMovedEvent);
@@ -62,7 +63,7 @@ const MapSquare = ({state, movementConnection, gameId, boardId, contents}) => {
                 if(!token)
                     return;
 
-                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {position: square.position, mapTokenId: mapToken.mapTokenId, tokenId: token.tokenId, game: { id: gameId}, boardId});
+                movementConnection.invoke(eventKeys.movement.MOVE_TOKEN, {position: square.position, mapTokenId: mapToken.mapTokenId, tokenId: token.tokenId, game: { id: square.gameId}, boardId: square.boardId});
             });
         },
     }));

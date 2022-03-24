@@ -56,7 +56,7 @@ internal class BoardService : IBoardService
 
     public async Task<Board?> Save(string gameId, Board board, User user)
     {
-        bool isValid = board.Width is > 8 and < 500 && board.Height is > 8 and < 500;
+        bool isValid = board.Width is >= 8 and <= 100 && board.Height is >= 8 and <= 100;
         if (!isValid)
         {
             Game? game = await _gameDataRepository.Get(gameId, user);

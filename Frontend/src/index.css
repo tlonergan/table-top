@@ -276,10 +276,15 @@ h2 a {
 
 .board {
   width: 100%;
-  padding: 64px;
+  max-width: 2200px;
+  max-height: 1000px;
+  margin: 64px 0;
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   align-content: center;
+  overflow: auto;
+  z-index: 4;
 }
 
 .boardColumn {
@@ -291,6 +296,7 @@ h2 a {
   width: 80px;
   border: .5px solid grey;
   padding: .5px;
+  z-index: 5;
 }
 
 .mapSquareSelected {
@@ -303,16 +309,18 @@ h2 a {
   background-color: darkgray;
   height: 76px;
   width: 76px;
+  z-index: 10;
 }
 
 .token > img{
   height: 75px;
   width: 75px;
+  z-index: 15;
 }
 
 .mapToken {
-
   border: 1px solid transparent;
+  z-index: 9;
 }
 
 .mapToken.selected {
