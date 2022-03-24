@@ -42,16 +42,17 @@ button,
 a.button {
   cursor: pointer;
   margin: 16px;
+  padding: 4px 8px;
   width: 168px;
   border: 0;
   border-radius: 8px;
   height: 40px;
-  background-color: rebeccapurple;
-  color: whitesmoke;
+  background-color: transparent;
+  color: #C84B31;
 }
 
 button:hover {
-  background-color: mediumpurple;
+  background-color: #C84B31;
   color: whitesmoke;
 }
 
@@ -78,16 +79,17 @@ h2 a {
 .navigationBar {
   display: flex;
   padding: 8px 0;
-  margin-bottom: 16px;
+  /* margin-bottom: 16px; */
   border: 0;
   border-bottom: 8px;
-  border-color: #161616;
+  border-color: #346751;
   border-style: solid;
   font-size: 1.25em;
   justify-content: space-between;
 }
 
 .navigationBar > :first-child{
+  margin-top: 8px;
   margin-left: 160px;
 }
 
@@ -104,13 +106,24 @@ h2 a {
   font-size: 1.25em;
 }
 
+.menuContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  margin-right: 56px;
+}
+
 .menu {
   margin-bottom: 8px;
   border: 0;
-  border-left: 4px;
-  border-right: 4px;
+  border-left: 2px;
+  border-right: 2px;
   border-style: solid;
+  border-color: #161616;
   text-align: center;
+  background-color: grey;
+  color: whitesmoke;
+  width: 800px;
 }
 
 .menu > :not(:first-child) {
@@ -119,19 +132,16 @@ h2 a {
 
 .menuItem {
   border: 0;
-  border-bottom: 4px;
+  border-bottom: 2px;
   border-style: solid;
-  padding-bottom: 8px;
-}
-
-.menuItem a {
-  color: #fff;
+  border-color: #161616;
+  padding: 8px 20px;
   text-decoration: none;
-  padding: 5px 20px;
-  width: 100%;
+  cursor: pointer;
 }
 
-.menuItem a:hover {
+.menuItem:hover {
+  background-color: #31c898;
 }
 
 .cardCarrier{

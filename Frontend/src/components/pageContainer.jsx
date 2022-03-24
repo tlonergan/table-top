@@ -1,10 +1,6 @@
 import React from 'react';
 import { Provider } from 'jotai';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useAuth0 } from '@auth0/auth0-react';
-
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHamburger } from '@fortawesome/free-solid-svg-icons';
 
 // import CanvasContainer from './canvasContainer'
 import MapHome from './mapHome';
@@ -13,21 +9,14 @@ import MapBoard from './mapBoard';
 import CreateGame from './createGame';
 import GameHome from './gameHome';
 import GameInvite from './gameInvite';
+import NavigationBar from './navigationBar';
 
 const PageContainer = () => {
-    const { logout } = useAuth0();
 
     return (
         <Provider>
             <BrowserRouter>
-                <div className="navigationBar">
-                    <span>Table Top</span>
-                    <div>
-                        <button className="menuButton" onClick={() => logout()}>
-                            <FontAwesomeIcon icon={faHamburger}/>
-                        </button>
-                    </div>
-                </div>
+                <NavigationBar />
                 <div className='pageContainer'>
                     {/* <CanvasContainer></CanvasContainer> */}
                     <Routes>
