@@ -71,7 +71,7 @@ const GameHome = () => {
                 <>
                     <span>{activeGame.name}</span>
                     <a onClick={() => setIsEditMode(true)}>
-                        <FontAwesomeIcon icon={faPencil} />
+                        {activeGame.isGameMaster ? <FontAwesomeIcon icon={faPencil} /> : <></>}
                     </a>
                 </>
             );
