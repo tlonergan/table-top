@@ -7,14 +7,21 @@ import Loading from './loading';
 import Card from './card';
 
 const MapHome = () => {
+    const { getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
 
     const [games, setGames] = useState([]);
-    const { getAccessTokenSilently } = useAuth0();
+    const [ isLoaded, setIsLoaded ] = useState(false);
 
     useEffect(()=> {
-        getGames(getAccessTokenSilently).then(setGames);
+        getGames(getAccessTokenSilently).then((games => {
+            setGames(games);
+            setIsLoaded(true);
+        }));
     }, []);
+
+    if(!isLoaded)
+        return (<Loading />);
 
     const getGamesSection = () => {
         if(!games || games.length === 0)
