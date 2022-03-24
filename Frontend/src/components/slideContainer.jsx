@@ -19,7 +19,7 @@ const SlideContainer = ({panels, children}) => {
             return (<></>);
 
         return (
-            <div style={{marginRight: '54px'}}>
+            <div style={{transform: 'translate(-180px, 28.7px)', backgroundColor: '#346751', padding: '36px 72px', minHeight: '500px', maxHeight: '1000px'}}>
                 {currentPanel.panel}
             </div>
         );

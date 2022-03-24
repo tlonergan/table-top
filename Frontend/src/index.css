@@ -293,15 +293,14 @@ h2 a {
   margin-top: 36px;
   padding: 4px 8px;
   min-width: 80px;
-  min-height: 33px;
-  /* -webkit-transform: rotate(90deg);
-  -moz-transform: rotate(90deg);
-  -ms-transform: rotate(90deg);
-  transform: rotate(90deg); */
+  height: 33px;
+  cursor: pointer;
 }
 
 .slideContainer .tab.currentTab {
   background-color: #346751;
+  border-radius: 0;
+  border: 0;
 }
 
 .slideContainer .tab.currentTab:hover {
