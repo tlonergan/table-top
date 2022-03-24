@@ -7,7 +7,7 @@ import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { removeSelectedMapToken } from '../state/token';
 import { activeBoardAtom } from "../state/board";
-import { getBoardHubConnectection, startHubConnection } from '../state/hubConnections';
+import { getBoardHubConnectection } from '../state/hubConnections';
 import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 

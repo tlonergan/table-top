@@ -3,12 +3,17 @@ import { useNavigate } from 'react-router-dom';
 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHamburger, faDiceD20 } from '@fortawesome/free-solid-svg-icons';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import { useAtomCallback } from 'jotai/utils';
+import { getActiveGameAtom } from '../state/game';
+import { useAtom } from 'jotai';
 
 const NavigationBar = () => {
     const { logout } = useAuth0();
     const navigate = useNavigate();
+    const activeGameAtom = useMemo(() => getActiveGameAtom(), []);
 
+    const [ game ] = useAtom(activeGameAtom);
     const [ isCollapsed, setIsCollapsed ] = useState(true);
 
     const menuItemClicked = (action) => {
@@ -16,6 +21,17 @@ const NavigationBar = () => {
         action();
     };
     
+    const getActiveGameMenuItem = () => {
+        if(!game)
+            return (<></>);
+
+        return (
+            <div className='menuItem' onClick={() => menuItemClicked(() => navigate(`/game/${game.id}`))}>
+                <span>{game.name} Home</span>
+            </div>
+        );
+    }
+
     return (        
         <>
             <div className="navigationBar">
@@ -34,6 +50,7 @@ const NavigationBar = () => {
                     <div className='menuItem' onClick={() => menuItemClicked(() => navigate('/'))}>
                         <span>Games</span>
                     </div>
+                    {getActiveGameMenuItem()}
                     <div className='menuItem' onClick={() => menuItemClicked(logout)}>
                         <span>Logout</span>
                     </div>
