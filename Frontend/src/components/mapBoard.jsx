@@ -41,9 +41,10 @@ const MapBoard = () => {
         setTokenAtoms(newTokenAttoms);
 
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
-        getBoardHubConnectection(getAccessTokenSilently).then(movementConnection => {
-            setMovementConnection(movementConnection);
-            movementConnection.invoke(eventKeys.REGISTER_BOARD, gameId, boardId);
+        getBoardHubConnectection(getAccessTokenSilently).then(newMovementConnection => {
+            console.log("MapBoard => useEffect[] => getBoardHubConnection then", newMovementConnection)
+            setMovementConnection(newMovementConnection);
+            newMovementConnection.invoke(eventKeys.general.REGISTER_BOARD, gameId, boardId);
         });
         
         const boardNotFound = () => navigate('/board-not-found');
@@ -58,26 +59,18 @@ const MapBoard = () => {
         })
         .catch(boardNotFound);
 
-        return () => {
-            setBoard(null);
-            movementConnection.invoke(eventKeys.UNREGISTER_BOARD, gameId, boardId);
-        };
+        return () => setBoard(null);
       }, []);
 
     useEffect(() => {
         if(!movementConnection || !board)
             return;
+            
         console.log("MapBoard => useEffect[movementConnection, board]", board);
         setUpBoard();
-    }, [movementConnection, board]);
 
-    const getExistingTokens = () => {        
-        let newTokenAttoms = getTokens().map(token => {
-            const tokenAtom = atom(token);
-            return tokenAtom;
-        });
-        setTokenAtoms([...newTokenAttoms]);
-    };
+        return () => movementConnection.invoke(eventKeys.general.UNREGISTER_BOARD, gameId, boardId);
+    }, [movementConnection, board]);
 
     const setUpBoard = () => {
         const squares = [];

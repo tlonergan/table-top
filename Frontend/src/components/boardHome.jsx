@@ -27,7 +27,6 @@ const BoardHome = ({boards, gameId}) => {
     const createNewBoardClick = () => {
         createBoard(getAccessTokenSilently, gameId)
         .then((createdBoard) => {
-            console.log("BoardHome => createNewBoardClick => createBoard Then => ", createBoard);
             setGameBoards([...gameBoards, atom(createdBoard)]);
         });
     };

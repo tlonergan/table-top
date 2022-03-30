@@ -1,9 +1,9 @@
 ﻿using System.Security.Claims;
-using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using TableTop.Entities;
 using TableTop.Entities.Authorization;
+using TableTop.Entities.People;
 using TableTop.Service;
 
 namespace TableTop;
@@ -20,30 +20,32 @@ public class BoardHub : Hub
 
     public async Task MoveToken(MapToken mapToken)
     {
-        ClaimsPrincipal? contextUser = this.Context.User;
+        ClaimsPrincipal? contextUser = Context.User;
         if (contextUser == null)
             return;
 
-        var user = new UserIdentity(contextUser.Identity).User;
+        User user = new UserIdentity(contextUser.Identity).User;
 
         await _boardService.SaveMapToken(mapToken, user);
-        await Clients.All.SendAsync("TokenMoved", mapToken);
+        await Clients.Groups(GetBoardGroupName(mapToken.Game.Id, mapToken.BoardId))
+                     .SendAsync("TokenMoved", mapToken);
     }
 
     public async Task DeleteToken(MapToken mapToken)
     {
-        if(Equals(mapToken.Position, new Position(-1, -1)))
+        if (Equals(mapToken.Position, new Position(-1, -1)))
         {
-            ClaimsPrincipal? contextUser = this.Context.User;
+            ClaimsPrincipal? contextUser = Context.User;
             if (contextUser == null)
                 return;
 
-            var user = new UserIdentity(contextUser.Identity).User;
+            User user = new UserIdentity(contextUser.Identity).User;
 
             await _boardService.DeleteMapToken(mapToken, user);
         }
 
-        await Clients.All.SendAsync("TokenDeleted", mapToken);
+        await Clients.Groups(GetBoardGroupName(mapToken.Game.Id, mapToken.BoardId))
+                     .SendAsync("TokenDeleted", mapToken);
     }
 
     public async Task RegisterConnectionToGame(string gameId)

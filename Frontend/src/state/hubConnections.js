@@ -12,6 +12,7 @@ const startHubConnection = (connection) => {
 };
 
 export const getBoardHubConnectection = async (getAccessTokenSilently) => {
+    console.log("hubConnections => getBoardHubConnection", boardHubConnection);
     if(boardHubConnection)
         return boardHubConnection;
 
@@ -27,12 +28,14 @@ export const getBoardHubConnectection = async (getAccessTokenSilently) => {
 }
 
 export const eventKeys = {
+    general: {
+        REGISTER_BOARD: "RegisterConnectionToBoard",
+        UNREGISTER_BOARD: "UnregisterConnectionToBoard",
+    },
     movement: {
         TOKEN_MOVED: "TokenMoved",
         MOVE_TOKEN: "MoveToken",
         TOKEN_DELETED: "TokenDeleted",
         DELETE_TOKEN: "DeleteToken",
-        REGISTER_BOARD: "RegisterConnectionToBoard",
-        UNREGISTER_BOARD: "UnregisterConnectionToBoard",
-    }
+    },
 };

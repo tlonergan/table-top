@@ -15,10 +15,8 @@ const GameInvite = () => {
     const [ hasError, setHasError] = useState(false);
 
     useEffect(() => {
-        console.log("GameInvite => Adding Player");
         addPlayer(getAccessTokenSilently, gameId)
         .then((isSuccess) => {
-            console.log("GameInvite => Added Player", isSuccess);
             if(isSuccess){
                 navigate(`/game/${gameId}`);
                 return;

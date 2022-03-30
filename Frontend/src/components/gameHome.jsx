@@ -25,7 +25,6 @@ const GameHome = () => {
     useEffect(() => {
         getGame(getAccessTokenSilently, gameId)
         .then((game) => {
-            console.log("Active Game: ", game);
             setActiveGame(game);
             setIsLoaded(true);
         });

@@ -34,6 +34,6 @@ internal class TokenService : ITokenService
         sasBuilder.SetPermissions(AccountSasPermissions.Read);
 
         SasQueryParameters parameters = sasBuilder.ToSasQueryParameters(storageCredentials);
-        
+        return new StorageToken { Token = parameters.ToString() };
     }
 }

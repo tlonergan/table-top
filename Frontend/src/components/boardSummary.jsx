@@ -32,8 +32,6 @@ const BoardSummary = ({state, gameId}) => {
     };
 
     const makeActiveClicked = () => {
-        console.log("BoardSummary => Make Active Clicked", board);
-
         board.isActive = true;
         updateBoard(getAccessTokenSilently, gameId, board)
         .then((savedBoard) => {
@@ -46,8 +44,6 @@ const BoardSummary = ({state, gameId}) => {
     };
 
     const onEditComplete = (isCancelled) => {
-        console.log("BoardSummary => onEditComplete", board);        
-        
         if(!isCancelled){
             updateBoard(getAccessTokenSilently, gameId, board)
             .then((savedBoard) => {
