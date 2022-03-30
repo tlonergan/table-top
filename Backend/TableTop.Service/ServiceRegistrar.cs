@@ -9,5 +9,6 @@ public static class ServiceRegistrar
     {
         services.AddSingleton<IGameService, GameService>();
         services.AddSingleton<IBoardService, BoardService>();
+        services.AddSingleton<ITokenService, TokenService>();
     }
 }

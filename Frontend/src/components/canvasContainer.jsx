@@ -23,9 +23,6 @@ const CanvasContainer = () => {
         let verticalLineCount = canvasWidth / squareSpacing;
         let horizontalLineCount = canvasHeight / squareSpacing;
 
-        console.log(verticalLineCount);
-        console.log(horizontalLineCount);
-
         ctx.beginPath();
         ctx.lineWidth = 1;
 

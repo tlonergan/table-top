@@ -29,8 +29,6 @@ const MapSquare = ({state, movementConnection, contents}) => {
     }, []);
 
     useEffect(() => {
-        console.log("MapSquare => useEffect[tokens]", tokens);
-
         const initialContents = [];
         contents.forEach(content => {
             let tokenAtom = unknownTokenAtom;
@@ -39,7 +37,6 @@ const MapSquare = ({state, movementConnection, contents}) => {
             if(token)
                 tokenAtom = token.atom;
 
-            console.log("MapSquare => useEffect => contents foreach", token, content.tokenId, tokens);
             const mapTokenAtom = createMapToken(square.squarePosition, tokenAtom, content.mapTokenId);
             initialContents.push(mapTokenAtom)
             addMapToken(mapTokenAtom);

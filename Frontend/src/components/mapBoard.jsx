@@ -7,14 +7,13 @@ import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { allTokenAtoms, removeSelectedMapToken } from '../state/token';
 import { activeBoardAtom } from "../state/board";
-import { getBoardHubConnectection } from '../state/hubConnections';
+import { eventKeys, getBoardHubConnectection } from '../state/hubConnections';
 import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 
 import Loading from './loading';
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
-import SlidePanel from "./slideTab";
 import SlideContainer from "./slideContainer";
 import { getTokens } from "../api/tokenService";
 
@@ -42,7 +41,11 @@ const MapBoard = () => {
         setTokenAtoms(newTokenAttoms);
 
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
-        getBoardHubConnectection(getAccessTokenSilently).then(setMovementConnection);
+        getBoardHubConnectection(getAccessTokenSilently).then(newMovementConnection => {
+            console.log("MapBoard => useEffect[] => getBoardHubConnection then", newMovementConnection)
+            setMovementConnection(newMovementConnection);
+            newMovementConnection.invoke(eventKeys.general.REGISTER_BOARD, gameId, boardId);
+        });
         
         const boardNotFound = () => navigate('/board-not-found');
         getBoard(getAccessTokenSilently, gameId, boardId)
@@ -62,17 +65,12 @@ const MapBoard = () => {
     useEffect(() => {
         if(!movementConnection || !board)
             return;
+            
         console.log("MapBoard => useEffect[movementConnection, board]", board);
         setUpBoard();
-    }, [movementConnection, board]);
 
-    const getExistingTokens = () => {        
-        let newTokenAttoms = getTokens().map(token => {
-            const tokenAtom = atom(token);
-            return tokenAtom;
-        });
-        setTokenAtoms([...newTokenAttoms]);
-    };
+        return () => movementConnection.invoke(eventKeys.general.UNREGISTER_BOARD, gameId, boardId);
+    }, [movementConnection, board]);
 
     const setUpBoard = () => {
         const squares = [];

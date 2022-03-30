@@ -37,7 +37,7 @@ const NavigationBar = () => {
             <div className="navigationBar">
                 <div>
                     <FontAwesomeIcon icon={faDiceD20} />&nbsp;
-                    <span>Table Top</span>
+                    <span>Projection Table Top</span>
                 </div>
                 <div>
                     <button className="menuButton" onClick={() => setIsCollapsed(!isCollapsed)}>
