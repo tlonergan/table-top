@@ -7,14 +7,13 @@ import { withAuthenticationRequired, useAuth0 } from '@auth0/auth0-react';
 
 import { allTokenAtoms, removeSelectedMapToken } from '../state/token';
 import { activeBoardAtom } from "../state/board";
-import { getBoardHubConnectection } from '../state/hubConnections';
+import { eventKeys, getBoardHubConnectection } from '../state/hubConnections';
 import { getBoard } from "../services/boardService";
 import keyCodes from '../entities/keyCodes';
 
 import Loading from './loading';
 import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
-import SlidePanel from "./slideTab";
 import SlideContainer from "./slideContainer";
 import { getTokens } from "../api/tokenService";
 
@@ -42,7 +41,10 @@ const MapBoard = () => {
         setTokenAtoms(newTokenAttoms);
 
         window.addEventListener('keyup', onDeleteRemoveSelectedMapToken);
-        getBoardHubConnectection(getAccessTokenSilently).then(setMovementConnection);
+        getBoardHubConnectection(getAccessTokenSilently).then(movementConnection => {
+            setMovementConnection(movementConnection);
+            movementConnection.invoke(eventKeys.REGISTER_BOARD, gameId, boardId);
+        });
         
         const boardNotFound = () => navigate('/board-not-found');
         getBoard(getAccessTokenSilently, gameId, boardId)
@@ -56,7 +58,10 @@ const MapBoard = () => {
         })
         .catch(boardNotFound);
 
-        return () => setBoard(null);
+        return () => {
+            setBoard(null);
+            movementConnection.invoke(eventKeys.UNREGISTER_BOARD, gameId, boardId);
+        };
       }, []);
 
     useEffect(() => {

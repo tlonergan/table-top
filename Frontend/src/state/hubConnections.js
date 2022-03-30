@@ -32,5 +32,7 @@ export const eventKeys = {
         MOVE_TOKEN: "MoveToken",
         TOKEN_DELETED: "TokenDeleted",
         DELETE_TOKEN: "DeleteToken",
+        REGISTER_BOARD: "RegisterConnectionToBoard",
+        UNREGISTER_BOARD: "UnregisterConnectionToBoard",
     }
 };

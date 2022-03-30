@@ -1,4 +1,5 @@
 ﻿using System.Security.Claims;
+using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using TableTop.Entities;
@@ -43,5 +44,32 @@ public class BoardHub : Hub
         }
 
         await Clients.All.SendAsync("TokenDeleted", mapToken);
+    }
+
+    public async Task RegisterConnectionToGame(string gameId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, gameId);
+    }
+
+    public async Task UnregisterConnectionToGame(string gameId)
+    {
+        await Groups.RemoveFromGroupAsync(Context.ConnectionId, gameId);
+    }
+
+    public async Task RegisterConnectionToBoard(string gameId, Guid boardId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetBoardGroupName(gameId, boardId));
+        await RegisterConnectionToGame(gameId);
+    }
+
+    public async Task UnregisterConnectionToBoard(string gameId, Guid boardId)
+    {
+        await Groups.AddToGroupAsync(Context.ConnectionId, GetBoardGroupName(gameId, boardId));
+        await UnregisterConnectionToGame(gameId);
+    }
+
+    private string GetBoardGroupName(string gameId, Guid boardId)
+    {
+        return $"{gameId}|{boardId}";
     }
 }
