@@ -16,6 +16,7 @@ import MapSquare from "./mapSquare";
 import TokenBox from './tokenBox';
 import SlideContainer from "./slideContainer";
 import { getTokens } from "../api/tokenService";
+import CanvasContainer from "./board/canvasContainer";
 
 const MapBoard = () => {
     console.log("Board => Render");
@@ -65,41 +66,9 @@ const MapBoard = () => {
     useEffect(() => {
         if(!movementConnection || !board)
             return;
-            
-        console.log("MapBoard => useEffect[movementConnection, board]", board);
-        setUpBoard();
 
         return () => movementConnection.invoke(eventKeys.general.UNREGISTER_BOARD, gameId, boardId);
     }, [movementConnection, board]);
-
-    const setUpBoard = () => {
-        const squares = [];
-
-        const squaresHigh = board.height;
-        const squaresWide = board.width;
-
-        console.log("Creating all Squares on board", squaresWide, squaresHigh);
-        const totalNumberOfSquares = squaresHigh * squaresWide;
-        let currentY = 0;
-        let currentX = 0;
-
-        for(let i = 0; i < totalNumberOfSquares; i++){
-            const squareContents = board.mapTokens.filter(mapToken => mapToken.position.x === currentX && mapToken.position.y === currentY);
-            
-            const boardSquareAtom = atom({position: {x: currentX, y: currentY}, contents: [], boardId: boardId, gameId: gameId});
-            boardSquareAtom.debugLabel = `square(${currentX}, ${currentY})`;
-
-            squares.push((<MapSquare key={boardSquareAtom} state={boardSquareAtom} movementConnection={movementConnection} contents={squareContents} />));
-
-            currentX++;
-            if(currentX >= squaresWide){
-                currentX = 0;
-                currentY++;
-            }
-        }
-
-        setRows(squares);
-    };
 
     const onDeleteRemoveSelectedMapToken = (e) => {
         if(e.keyCode !== keyCodes.DELETE && e.keyCode !== keyCodes.BACKSPACE)
@@ -114,7 +83,8 @@ const MapBoard = () => {
 
         return (
             <div className="board" style={{width: `${board.width * 80}px`, height: `${board.height * 80}px`}}>
-                {rows.map(r => r)}
+                {/* {rows.map(r => r)} */}
+                <CanvasContainer state={activeBoardAtom}/>
             </div>
         );
     };
